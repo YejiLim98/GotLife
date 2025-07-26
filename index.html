@@ -331,8 +331,7 @@
         }
         
         .loading {
-            opacity: 0.6;
-            pointer-events: none;
+            display: none !important;
         }
     </style>
 </head>
@@ -353,11 +352,11 @@
             <button class="config-btn secondary" onclick="toggleConfigSection()">⚙️ 설정 숨기기</button>
         </div>
         
-        <div id="sync-status" class="sync-status loading">
-            🔄 구글 시트에서 데이터 로딩 중...
+        <div id="sync-status" class="sync-status success">
+            ✅ 앱 준비 완료 - 데이터 로딩 중...
         </div>
         
-        <div id="app-content" class="loading">
+        <div id="app-content">
             <div class="user-tabs">
                 <button class="tab active" onclick="switchUser('예지')">예지</button>
                 <button class="tab" onclick="switchUser('이지')">이지</button>
@@ -534,7 +533,6 @@
                 isConnected = true;
                 updateSyncStatus('✅ 완전 연동 - 실시간 읽기/쓰기 가능', 'success');
                 
-                document.getElementById('app-content').classList.remove('loading');
                 updateDisplay();
                 
                 // 5분마다 자동 동기화
