@@ -556,52 +556,59 @@
             // 자동으로 연결되므로 불필요
         }
         
-        // 구글 시트에서 데이터 로드
+        // 구글 시트에서 데이터 로드 (디버깅 버전)
         async function loadDataFromSheet() {
+            console.log('데이터 로드 시작...');
             const csvUrl = `https://docs.google.com/spreadsheets/d/${FIXED_SHEET_ID}/export?format=csv`;
             
-            const response = await fetch(csvUrl);
-            if (!response.ok) {
-                throw new Error('시트 접근 불가');
-            }
-            
-            const csvText = await response.text();
-            const rows = csvText.trim().split('\n').map(row => {
-                // CSV 파싱 개선 (쉼표가 포함된 경우 처리)
-                const result = [];
-                let current = '';
-                let inQuotes = false;
+            try {
+                console.log('CSV URL:', csvUrl);
+                const response = await fetch(csvUrl);
+                console.log('응답 상태:', response.status);
                 
-                for (let i = 0; i < row.length; i++) {
-                    const char = row[i];
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        result.push(current.trim());
-                        current = '';
-                    } else {
-                        current += char;
-                    }
+                if (!response.ok) {
+                    throw new Error('시트 접근 불가: ' + response.status);
                 }
-                result.push(current.trim());
-                return result;
-            });
-            
-            // 헤더 제거
-            if (rows.length > 1) {
-                rows.shift();
+                
+                const csvText = await response.text();
+                console.log('CSV 데이터:', csvText);
+                
+                const rows = csvText.trim().split('\n').map(row => {
+                    // 간단한 CSV 파싱
+                    return row.split(',').map(cell => cell.trim().replace(/"/g, ''));
+                });
+                
+                console.log('파싱된 행들:', rows);
+                
+                // 헤더 제거
+                if (rows.length > 1) {
+                    rows.shift();
+                    console.log('헤더 제거 후:', rows);
+                }
+                
+                // 데이터 파싱
+                rows.forEach((row, index) => {
+                    console.log(`행 ${index}:`, row);
+                    if (row.length >= 4) {
+                        const [user, type, points, level] = row;
+                        console.log(`처리 중: ${user}, ${type}, ${points}, ${level}`);
+                        
+                        if (gameData[user] && gameData[user][type]) {
+                            gameData[user][type].points = parseInt(points) || 0;
+                            gameData[user][type].level = parseInt(level) || 1;
+                            console.log(`업데이트 완료: ${user} ${type}`);
+                        } else {
+                            console.log(`데이터 구조 불일치: ${user}, ${type}`);
+                        }
+                    }
+                });
+                
+                console.log('최종 게임 데이터:', gameData);
+                
+            } catch (error) {
+                console.error('데이터 로드 오류:', error);
+                throw error;
             }
-            
-            // 데이터 파싱
-            rows.forEach(row => {
-                if (row.length >= 4) {
-                    const [user, type, points, level] = row;
-                    if (gameData[user] && gameData[user][type]) {
-                        gameData[user][type].points = parseInt(points) || 0;
-                        gameData[user][type].level = parseInt(level) || 1;
-                    }
-                }
-            });
         }
         
         // 구글 시트에 데이터 저장 (Apps Script 사용)
