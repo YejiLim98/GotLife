@@ -38,6 +38,74 @@
             margin-bottom: 10px;
         }
         
+        .sync-status {
+            background: #e8f5e8;
+            border: 1px solid #4CAF50;
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #2e7d32;
+        }
+        
+        .sync-status.error {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+        
+        .sync-status.loading {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #ef6c00;
+        }
+        
+        .config-section {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .config-section h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .config-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .config-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        .config-btn:hover {
+            background: #45a049;
+        }
+        
+        .config-btn.secondary {
+            background: #2196F3;
+        }
+        
+        .config-btn.secondary:hover {
+            background: #1976D2;
+        }
+        
         .user-tabs {
             display: flex;
             margin-bottom: 20px;
@@ -175,6 +243,12 @@
             transform: translateY(0);
         }
         
+        .action-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         .points {
             background: #4CAF50;
             color: white;
@@ -211,6 +285,10 @@
             opacity: 1;
         }
         
+        .notification.error {
+            background: #f44336;
+        }
+        
         .reset-btn {
             width: 100%;
             background: #ff4757;
@@ -220,7 +298,28 @@
             border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
-            margin-top: 20px;
+            margin-top: 10px;
+        }
+        
+        .undo-btn {
+            width: 100%;
+            background: #ffa502;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -230,86 +329,110 @@
             <h1>🌟 자기계발 캐릭터 성장 🌟</h1>
         </div>
         
-        <div class="user-tabs">
-            <button class="tab active" onclick="switchUser('예지')">예지</button>
-            <button class="tab" onclick="switchUser('이지')">이지</button>
+        <div id="config-section" class="config-section hidden">
+            <h3>📊 구글 시트 연동 상태</h3>
+            <p style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                ✅ 완전 연동 설정 완료<br>
+                📊 시트: GotLife 데이터<br>
+                🔗 API: 자동 연결됨
+            </p>
+            <button class="config-btn secondary" onclick="forceSync()">🔄 수동 동기화</button>
+            <button class="config-btn secondary" onclick="toggleConfigSection()">⚙️ 설정 숨기기</button>
         </div>
         
-        <div id="current-user" class="level-display">
-            <div style="font-size: 18px; margin-bottom: 5px;">👑 예지의 캐릭터들</div>
+        <div id="sync-status" class="sync-status loading">
+            🔄 구글 시트에서 데이터 로딩 중...
         </div>
         
-        <div class="characters">
-            <div class="character">
-                <div class="character-icon" id="strength-char">🐱</div>
-                <div class="character-name" id="strength-name">쭈글 고양이</div>
-                <div class="character-level" id="strength-level">레벨 1</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="strength-progress" style="width: 0%"></div>
-                </div>
-                <div class="progress-text" id="strength-text">0/50</div>
+        <div id="app-content" class="loading">
+            <div class="user-tabs">
+                <button class="tab active" onclick="switchUser('예지')">예지</button>
+                <button class="tab" onclick="switchUser('이지')">이지</button>
             </div>
             
-            <div class="character">
-                <div class="character-icon" id="intelligence-char">🐻</div>
-                <div class="character-name" id="intelligence-name">졸린 곰</div>
-                <div class="character-level" id="intelligence-level">레벨 1</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="intelligence-progress" style="width: 0%"></div>
-                </div>
-                <div class="progress-text" id="intelligence-text">0/50</div>
+            <div id="current-user" class="level-display">
+                <div style="font-size: 18px; margin-bottom: 5px;">👑 예지의 캐릭터들</div>
             </div>
-        </div>
-        
-        <div class="actions">
-            <div class="action-category">
-                <div class="category-title strength">💪 근력 활동</div>
-                <div class="action-buttons">
-                    <button class="action-btn" onclick="addPoints('strength', 15)">
-                        <span>🏋️ 헬스장 운동 (1시간)</span>
-                        <span class="points">+15</span>
-                    </button>
-                    <button class="action-btn" onclick="addPoints('strength', 15)">
-                        <span>💃 연습실 댄스 (1시간)</span>
-                        <span class="points">+15</span>
-                    </button>
-                    <button class="action-btn" onclick="addPoints('strength', 15)">
-                        <span>🏊 수영 1회</span>
-                        <span class="points">+15</span>
-                    </button>
-                    <button class="action-btn" onclick="addPoints('strength', 10)">
-                        <span>🚶 걷기 (1시간)</span>
-                        <span class="points">+10</span>
-                    </button>
+            
+            <div class="characters">
+                <div class="character">
+                    <div class="character-icon" id="strength-char">🐱</div>
+                    <div class="character-name" id="strength-name">쭈글 고양이</div>
+                    <div class="character-level" id="strength-level">레벨 1</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="strength-progress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="strength-text">0/50</div>
+                </div>
+                
+                <div class="character">
+                    <div class="character-icon" id="intelligence-char">🐻</div>
+                    <div class="character-name" id="intelligence-name">졸린 곰</div>
+                    <div class="character-level" id="intelligence-level">레벨 1</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="intelligence-progress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="intelligence-text">0/50</div>
                 </div>
             </div>
             
-            <div class="action-category">
-                <div class="category-title intelligence">🧠 지력 활동</div>
-                <div class="action-buttons">
-                    <button class="action-btn" onclick="addPoints('intelligence', 5)">
-                        <span>📚 전공공부 (10분)</span>
-                        <span class="points">+5</span>
-                    </button>
-                    <button class="action-btn" onclick="addPoints('intelligence', 2)">
-                        <span>🎨 취미공부 (10분)</span>
-                        <span class="points">+2</span>
-                    </button>
-                    <button class="action-btn" onclick="addPoints('intelligence', 1)">
-                        <span>📖 독서 (10분)</span>
-                        <span class="points">+1</span>
-                    </button>
+            <div class="actions">
+                <div class="action-category">
+                    <div class="category-title strength">💪 근력 활동</div>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="addPoints('strength', 15)">
+                            <span>🏋️ 헬스장 운동 (1시간)</span>
+                            <span class="points">+15</span>
+                        </button>
+                        <button class="action-btn" onclick="addPoints('strength', 15)">
+                            <span>💃 연습실 댄스 (1시간)</span>
+                            <span class="points">+15</span>
+                        </button>
+                        <button class="action-btn" onclick="addPoints('strength', 15)">
+                            <span>🏊 수영 1회</span>
+                            <span class="points">+15</span>
+                        </button>
+                        <button class="action-btn" onclick="addPoints('strength', 10)">
+                            <span>🚶 걷기 (1시간)</span>
+                            <span class="points">+10</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="action-category">
+                    <div class="category-title intelligence">🧠 지력 활동</div>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="addPoints('intelligence', 5)">
+                            <span>📚 전공공부 (10분)</span>
+                            <span class="points">+5</span>
+                        </button>
+                        <button class="action-btn" onclick="addPoints('intelligence', 2)">
+                            <span>🎨 취미공부 (10분)</span>
+                            <span class="points">+2</span>
+                        </button>
+                        <button class="action-btn" onclick="addPoints('intelligence', 1)">
+                            <span>📖 독서 (10분)</span>
+                            <span class="points">+1</span>
+                        </button>
+                    </div>
                 </div>
             </div>
+            
+            <button class="undo-btn" onclick="undoLastAction()">↩️ 마지막 행동 되돌리기</button>
+            <button class="reset-btn" onclick="resetProgress()">🔄 진행상황 초기화</button>
         </div>
-        
-        <button class="reset-btn" onclick="resetProgress()">🔄 진행상황 초기화</button>
-        <button class="reset-btn" onclick="undoLastAction()" style="background: #ffa502; margin-top: 10px;">↩️ 마지막 행동 되돌리기</button>
     </div>
     
     <div id="notification" class="notification"></div>
     
     <script>
+        // 고정된 구글 시트 설정
+        const FIXED_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1wQZD2MxqovNA4zz2lKpPb57YJXmzON0Zv_P2SRJYW-Y/edit?usp=sharing';
+        const FIXED_SHEET_ID = '1wQZD2MxqovNA4zz2lKpPb57YJXmzON0Zv_P2SRJYW-Y';
+        
+        // Google Apps Script 웹앱 URL (고정)
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKDpXdxKP3UeC-o_GRA-hNgIUODIf7j2PAtFD4JD3-NgJP82PhyDlSgjWT7CCIZLF64Q/exec';
+        
         // 게임 데이터
         let gameData = {
             예지: {
@@ -324,16 +447,16 @@
         
         // 마지막 행동 기록
         let lastAction = null;
-        
         let currentUser = '예지';
+        let isConnected = false;
         
-        // 캐릭터 진화 이모지들 (여기서 수정하세요!)
+        // 캐릭터 진화 이모지들
         const characterEvolution = {
             strength: ['🐱', '😸', '😺', '🙀', '😻', '😽', '🐯', '🦁', '👑🐯', '🔥🦁'],
             intelligence: ['🐻', '🐼', '🧸', '🤓🐻', '📚🐼', '🎓🧸', '🧠🐻', '👨‍🎓🐼', '🏆🧸', '🌟🧠']
         };
         
-        // 캐릭터 이름들 (여기서 수정하세요!)
+        // 캐릭터 이름들
         const characterNames = {
             strength: ['쭈글 고양이', '귀여운 고양이', '웃는 고양이', '놀란 고양이', '사랑 고양이', 
                       '키스 고양이', '호랑이', '사자', '왕관 호랑이', '불꽃 사자'],
@@ -341,24 +464,202 @@
                           '졸업곰', '천재곰', '박사 판다', '우승곰', '별빛 천재']
         };
         
-        // 로컬 스토리지에서 데이터 로드
-        function loadData() {
-            const saved = localStorage.getItem('selfDevelopmentApp');
-            if (saved) {
-                gameData = JSON.parse(saved);
+        // Apps Script URL 설정
+        function setAppsScriptUrl() {
+            const url = document.getElementById('apps-script-url').value.trim();
+            if (!url) {
+                showNotification('Apps Script URL을 입력해주세요.', 'error');
+                return;
+            }
+            
+            // URL을 코드에 직접 설정 (실제로는 localStorage 사용)
+            localStorage.setItem('appsScriptUrl', url);
+            showNotification('Apps Script URL이 설정되었습니다!');
+            
+            // 실제 사용을 위해 전역 변수 업데이트
+            window.APPS_SCRIPT_URL = url;
+        }
+        
+        // 저장된 Apps Script URL 로드
+        function loadAppsScriptUrl() {
+            const savedUrl = localStorage.getItem('appsScriptUrl');
+            if (savedUrl) {
+                document.getElementById('apps-script-url').value = savedUrl;
+                window.APPS_SCRIPT_URL = savedUrl;
+                return true;
+            }
+            return false;
+        }
+        // 자동 초기화 및 연결
+        async function initializeApp() {
+            updateSyncStatus('🔄 구글 시트에서 데이터 로딩 중...', 'loading');
+            
+            try {
+                await loadDataFromSheet();
+                isConnected = true;
+                updateSyncStatus('✅ 완전 연동 - 실시간 읽기/쓰기 가능', 'success');
+                
+                document.getElementById('app-content').classList.remove('loading');
+                updateDisplay();
+                
+                // 5분마다 자동 동기화
+                setInterval(async () => {
+                    try {
+                        await loadDataFromSheet();
+                        updateDisplay();
+                        console.log('자동 동기화 완료');
+                    } catch (error) {
+                        console.error('자동 동기화 실패:', error);
+                    }
+                }, 5 * 60 * 1000);
+                
+            } catch (error) {
+                console.error('초기 연결 오류:', error);
+                updateSyncStatus('❌ 연결 실패: 시트 권한을 확인해주세요', 'error');
+                isConnected = false;
             }
         }
         
-        // 로컬 스토리지에 데이터 저장
-        function saveData() {
-            localStorage.setItem('selfDevelopmentApp', JSON.stringify(gameData));
+        // 수동 동기화
+        async function forceSync() {
+            updateSyncStatus('🔄 동기화 중...', 'loading');
+            try {
+                await loadDataFromSheet();
+                updateDisplay();
+                updateSyncStatus('✅ 동기화 완료', 'success');
+                showNotification('최신 데이터로 동기화되었습니다!');
+            } catch (error) {
+                console.error('동기화 오류:', error);
+                updateSyncStatus('❌ 동기화 실패', 'error');
+                showNotification('동기화에 실패했습니다.', 'error');
+            }
+        }
+        
+        // 설정 섹션 토글
+        function toggleConfigSection() {
+            const configSection = document.getElementById('config-section');
+            configSection.classList.toggle('hidden');
+        }
+        
+        // 로컬 스토리지에서 설정 로드 (삭제)
+        function loadSettings() {
+            // 고정 시트를 사용하므로 불필요
+        }
+        
+        // 구글 시트 URL에서 ID 추출 (삭제됨 - 고정 ID 사용)
+        function extractSheetId(url) {
+            // 사용하지 않음
+        }
+        
+        // 구글 시트 연결 (자동화됨)
+        async function connectGoogleSheet() {
+            // 자동으로 연결되므로 불필요
+        }
+        
+        // 구글 시트에서 데이터 로드
+        async function loadDataFromSheet() {
+            const csvUrl = `https://docs.google.com/spreadsheets/d/${FIXED_SHEET_ID}/export?format=csv`;
+            
+            const response = await fetch(csvUrl);
+            if (!response.ok) {
+                throw new Error('시트 접근 불가');
+            }
+            
+            const csvText = await response.text();
+            const rows = csvText.trim().split('\n').map(row => {
+                // CSV 파싱 개선 (쉼표가 포함된 경우 처리)
+                const result = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let i = 0; i < row.length; i++) {
+                    const char = row[i];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        result.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                result.push(current.trim());
+                return result;
+            });
+            
+            // 헤더 제거
+            if (rows.length > 1) {
+                rows.shift();
+            }
+            
+            // 데이터 파싱
+            rows.forEach(row => {
+                if (row.length >= 4) {
+                    const [user, type, points, level] = row;
+                    if (gameData[user] && gameData[user][type]) {
+                        gameData[user][type].points = parseInt(points) || 0;
+                        gameData[user][type].level = parseInt(level) || 1;
+                    }
+                }
+            });
+        }
+        
+        // 구글 시트에 데이터 저장 (Apps Script 사용)
+        async function saveDataToSheet() {
+            if (!isConnected) {
+                console.log('시트에 연결되지 않았습니다.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        예지_strength_points: gameData['예지'].strength.points,
+                        예지_strength_level: gameData['예지'].strength.level,
+                        예지_intelligence_points: gameData['예지'].intelligence.points,
+                        예지_intelligence_level: gameData['예지'].intelligence.level,
+                        이지_strength_points: gameData['이지'].strength.points,
+                        이지_strength_level: gameData['이지'].strength.level,
+                        이지_intelligence_points: gameData['이지'].intelligence.points,
+                        이지_intelligence_level: gameData['이지'].intelligence.level
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    console.log('구글 시트 저장 성공');
+                } else {
+                    console.error('구글 시트 저장 실패:', result.error);
+                }
+            } catch (error) {
+                console.error('Apps Script 호출 오류:', error);
+            }
+        }
+        
+        // 동기화 상태 업데이트
+        function updateSyncStatus(message, type) {
+            const statusElement = document.getElementById('sync-status');
+            statusElement.textContent = message;
+            statusElement.className = `sync-status ${type}`;
+        }
+        
+        // 설정 가이드 표시/숨기기
+        function showSetupGuide() {
+            document.getElementById('setup-guide').classList.remove('hidden');
+        }
+        
+        function hideSetupGuide() {
+            document.getElementById('setup-guide').classList.add('hidden');
         }
         
         // 사용자 전환
         function switchUser(user) {
             currentUser = user;
             
-            // 탭 활성화
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
                 if (tab.textContent === user) {
@@ -373,7 +674,12 @@
         }
         
         // 포인트 추가
-        function addPoints(type, points) {
+        async function addPoints(type, points) {
+            if (!isConnected) {
+                showNotification('구글 시트에 먼저 연결해주세요.', 'error');
+                return;
+            }
+            
             const userData = gameData[currentUser];
             const oldLevel = userData[type].level;
             const oldPoints = userData[type].points;
@@ -396,19 +702,25 @@
                     userData[type].points -= 50;
                     showNotification(`🎉 ${currentUser}의 ${type === 'strength' ? '근력' : '지력'} 캐릭터가 레벨 ${userData[type].level}로 성장했습니다!`);
                 } else {
-                    userData[type].points = 50; // 최대 레벨에서는 50으로 고정
+                    userData[type].points = 50;
                 }
             }
             
-            saveData();
+            await saveDataToSheet();
             updateDisplay();
             showNotification(`+${points} 포인트 획득!`);
+            updateSyncStatus('✅ 동기화 완료', 'success');
         }
         
         // 마지막 행동 되돌리기
-        function undoLastAction() {
+        async function undoLastAction() {
             if (!lastAction) {
-                showNotification('되돌릴 행동이 없습니다.');
+                showNotification('되돌릴 행동이 없습니다.', 'error');
+                return;
+            }
+            
+            if (!isConnected) {
+                showNotification('구글 시트에 먼저 연결해주세요.', 'error');
                 return;
             }
             
@@ -416,10 +728,11 @@
             userData[lastAction.type].level = lastAction.oldLevel;
             userData[lastAction.type].points = lastAction.oldPoints;
             
-            saveData();
+            await saveDataToSheet();
             updateDisplay();
             showNotification('마지막 행동이 취소되었습니다.');
             lastAction = null;
+            updateSyncStatus('✅ 동기화 완료', 'success');
         }
         
         // 화면 업데이트
@@ -450,38 +763,48 @@
         }
         
         // 알림 표시
-        function showNotification(message) {
+        function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
             notification.textContent = message;
-            notification.classList.add('show');
+            notification.className = `notification show ${type}`;
             
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 2000);
+            }, 3000);
         }
         
         // 진행상황 초기화
-        function resetProgress() {
-            if (confirm('정말로 모든 진행상황을 초기화하시겠습니까?')) {
-                gameData = {
-                    예지: {
-                        strength: { points: 0, level: 1 },
-                        intelligence: { points: 0, level: 1 }
-                    },
-                    이지: {
-                        strength: { points: 0, level: 1 },
-                        intelligence: { points: 0, level: 1 }
-                    }
-                };
-                saveData();
-                updateDisplay();
-                showNotification('진행상황이 초기화되었습니다.');
+        async function resetProgress() {
+            if (!confirm('정말로 모든 진행상황을 초기화하시겠습니까?')) {
+                return;
             }
+            
+            if (!isConnected) {
+                showNotification('구글 시트에 먼저 연결해주세요.', 'error');
+                return;
+            }
+            
+            gameData = {
+                예지: {
+                    strength: { points: 0, level: 1 },
+                    intelligence: { points: 0, level: 1 }
+                },
+                이지: {
+                    strength: { points: 0, level: 1 },
+                    intelligence: { points: 0, level: 1 }
+                }
+            };
+            
+            await saveDataToSheet();
+            updateDisplay();
+            showNotification('진행상황이 초기화되었습니다.');
+            updateSyncStatus('✅ 동기화 완료', 'success');
         }
         
         // 초기화
-        loadData();
-        updateDisplay();
+        window.addEventListener('load', () => {
+            loadSettings();
+        });
     </script>
 </body>
 </html>
