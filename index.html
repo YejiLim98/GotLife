@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자기계발 캐릭터 성장</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .user-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: #f0f0f0;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .tab:first-child {
+            border-radius: 10px 0 0 10px;
+        }
+        
+        .tab:last-child {
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .characters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .character {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .character-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .character-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .character-level {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .actions {
+            margin-bottom: 20px;
+        }
+        
+        .action-category {
+            margin-bottom: 20px;
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .category-title.strength {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .category-title.intelligence {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .action-buttons {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .action-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        .action-btn:active {
+            transform: translateY(0);
+        }
+        
+        .points {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+        
+        .level-display {
+            background: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        .reset-btn {
+            width: 100%;
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 자기계발 캐릭터 성장 🌟</h1>
+        </div>
+        
+        <div class="user-tabs">
+            <button class="tab active" onclick="switchUser('예지')">예지</button>
+            <button class="tab" onclick="switchUser('이지')">이지</button>
+        </div>
+        
+        <div id="current-user" class="level-display">
+            <div style="font-size: 18px; margin-bottom: 5px;">👑 예지의 캐릭터들</div>
+        </div>
+        
+        <div class="characters">
+            <div class="character">
+                <div class="character-icon" id="strength-char">🐱</div>
+                <div class="character-name" id="strength-name">쭈글 고양이</div>
+                <div class="character-level" id="strength-level">레벨 1</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="strength-progress" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="strength-text">0/50</div>
+            </div>
+            
+            <div class="character">
+                <div class="character-icon" id="intelligence-char">🐻</div>
+                <div class="character-name" id="intelligence-name">졸린 곰</div>
+                <div class="character-level" id="intelligence-level">레벨 1</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="intelligence-progress" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="intelligence-text">0/50</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <div class="action-category">
+                <div class="category-title strength">💪 근력 활동</div>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="addPoints('strength', 15)">
+                        <span>🏋️ 헬스장 운동 (1시간)</span>
+                        <span class="points">+15</span>
+                    </button>
+                    <button class="action-btn" onclick="addPoints('strength', 15)">
+                        <span>💃 연습실 댄스 (1시간)</span>
+                        <span class="points">+15</span>
+                    </button>
+                    <button class="action-btn" onclick="addPoints('strength', 15)">
+                        <span>🏊 수영 1회</span>
+                        <span class="points">+15</span>
+                    </button>
+                    <button class="action-btn" onclick="addPoints('strength', 10)">
+                        <span>🚶 걷기 (1시간)</span>
+                        <span class="points">+10</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="action-category">
+                <div class="category-title intelligence">🧠 지력 활동</div>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="addPoints('intelligence', 5)">
+                        <span>📚 전공공부 (10분)</span>
+                        <span class="points">+5</span>
+                    </button>
+                    <button class="action-btn" onclick="addPoints('intelligence', 2)">
+                        <span>🎨 취미공부 (10분)</span>
+                        <span class="points">+2</span>
+                    </button>
+                    <button class="action-btn" onclick="addPoints('intelligence', 1)">
+                        <span>📖 독서 (10분)</span>
+                        <span class="points">+1</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="reset-btn" onclick="resetProgress()">🔄 진행상황 초기화</button>
+        <button class="reset-btn" onclick="undoLastAction()" style="background: #ffa502; margin-top: 10px;">↩️ 마지막 행동 되돌리기</button>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+    
+    <script>
+        // 게임 데이터
+        let gameData = {
+            예지: {
+                strength: { points: 0, level: 1 },
+                intelligence: { points: 0, level: 1 }
+            },
+            이지: {
+                strength: { points: 0, level: 1 },
+                intelligence: { points: 0, level: 1 }
+            }
+        };
+        
+        // 마지막 행동 기록
+        let lastAction = null;
+        
+        let currentUser = '예지';
+        
+        // 캐릭터 진화 이모지들 (여기서 수정하세요!)
+        const characterEvolution = {
+            strength: ['🐱', '😸', '😺', '🙀', '😻', '😽', '🐯', '🦁', '👑🐯', '🔥🦁'],
+            intelligence: ['🐻', '🐼', '🧸', '🤓🐻', '📚🐼', '🎓🧸', '🧠🐻', '👨‍🎓🐼', '🏆🧸', '🌟🧠']
+        };
+        
+        // 캐릭터 이름들 (여기서 수정하세요!)
+        const characterNames = {
+            strength: ['쭈글 고양이', '귀여운 고양이', '웃는 고양이', '놀란 고양이', '사랑 고양이', 
+                      '키스 고양이', '호랑이', '사자', '왕관 호랑이', '불꽃 사자'],
+            intelligence: ['졸린 곰', '판다곰', '테디베어', '공부곰', '책읽는 판다', 
+                          '졸업곰', '천재곰', '박사 판다', '우승곰', '별빛 천재']
+        };
+        
+        // 로컬 스토리지에서 데이터 로드
+        function loadData() {
+            const saved = localStorage.getItem('selfDevelopmentApp');
+            if (saved) {
+                gameData = JSON.parse(saved);
+            }
+        }
+        
+        // 로컬 스토리지에 데이터 저장
+        function saveData() {
+            localStorage.setItem('selfDevelopmentApp', JSON.stringify(gameData));
+        }
+        
+        // 사용자 전환
+        function switchUser(user) {
+            currentUser = user;
+            
+            // 탭 활성화
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.textContent === user) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            document.getElementById('current-user').innerHTML = 
+                `<div style="font-size: 18px; margin-bottom: 5px;">👑 ${user}의 캐릭터들</div>`;
+            
+            updateDisplay();
+        }
+        
+        // 포인트 추가
+        function addPoints(type, points) {
+            const userData = gameData[currentUser];
+            const oldLevel = userData[type].level;
+            const oldPoints = userData[type].points;
+            
+            // 마지막 행동 기록
+            lastAction = {
+                user: currentUser,
+                type: type,
+                points: points,
+                oldLevel: oldLevel,
+                oldPoints: oldPoints
+            };
+            
+            userData[type].points += points;
+            
+            // 레벨업 체크
+            if (userData[type].points >= 50) {
+                if (userData[type].level < 10) {
+                    userData[type].level++;
+                    userData[type].points -= 50;
+                    showNotification(`🎉 ${currentUser}의 ${type === 'strength' ? '근력' : '지력'} 캐릭터가 레벨 ${userData[type].level}로 성장했습니다!`);
+                } else {
+                    userData[type].points = 50; // 최대 레벨에서는 50으로 고정
+                }
+            }
+            
+            saveData();
+            updateDisplay();
+            showNotification(`+${points} 포인트 획득!`);
+        }
+        
+        // 마지막 행동 되돌리기
+        function undoLastAction() {
+            if (!lastAction) {
+                showNotification('되돌릴 행동이 없습니다.');
+                return;
+            }
+            
+            const userData = gameData[lastAction.user];
+            userData[lastAction.type].level = lastAction.oldLevel;
+            userData[lastAction.type].points = lastAction.oldPoints;
+            
+            saveData();
+            updateDisplay();
+            showNotification('마지막 행동이 취소되었습니다.');
+            lastAction = null;
+        }
+        
+        // 화면 업데이트
+        function updateDisplay() {
+            const userData = gameData[currentUser];
+            
+            // 근력 캐릭터 업데이트
+            const strengthLevel = userData.strength.level;
+            const strengthPoints = userData.strength.points;
+            const strengthProgress = (strengthPoints / 50) * 100;
+            
+            document.getElementById('strength-char').textContent = characterEvolution.strength[strengthLevel - 1];
+            document.getElementById('strength-name').textContent = characterNames.strength[strengthLevel - 1];
+            document.getElementById('strength-level').textContent = `레벨 ${strengthLevel}`;
+            document.getElementById('strength-progress').style.width = `${strengthProgress}%`;
+            document.getElementById('strength-text').textContent = `${strengthPoints}/50`;
+            
+            // 지력 캐릭터 업데이트
+            const intelligenceLevel = userData.intelligence.level;
+            const intelligencePoints = userData.intelligence.points;
+            const intelligenceProgress = (intelligencePoints / 50) * 100;
+            
+            document.getElementById('intelligence-char').textContent = characterEvolution.intelligence[intelligenceLevel - 1];
+            document.getElementById('intelligence-name').textContent = characterNames.intelligence[intelligenceLevel - 1];
+            document.getElementById('intelligence-level').textContent = `레벨 ${intelligenceLevel}`;
+            document.getElementById('intelligence-progress').style.width = `${intelligenceProgress}%`;
+            document.getElementById('intelligence-text').textContent = `${intelligencePoints}/50`;
+        }
+        
+        // 알림 표시
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+        
+        // 진행상황 초기화
+        function resetProgress() {
+            if (confirm('정말로 모든 진행상황을 초기화하시겠습니까?')) {
+                gameData = {
+                    예지: {
+                        strength: { points: 0, level: 1 },
+                        intelligence: { points: 0, level: 1 }
+                    },
+                    이지: {
+                        strength: { points: 0, level: 1 },
+                        intelligence: { points: 0, level: 1 }
+                    }
+                };
+                saveData();
+                updateDisplay();
+                showNotification('진행상황이 초기화되었습니다.');
+            }
+        }
+        
+        // 초기화
+        loadData();
+        updateDisplay();
+    </script>
+</body>
+</html>
