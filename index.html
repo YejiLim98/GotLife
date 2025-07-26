@@ -150,9 +150,22 @@
         }
         
         .character-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px auto;
             display: block;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+        }
+        
+        .character-icon.emoji {
+            font-size: 40px;
+            line-height: 56px;
+            text-align: center;
+            border: none;
+            background: none;
         }
         
         .character-name {
@@ -450,10 +463,32 @@
         let currentUser = '예지';
         let isConnected = false;
         
-        // 캐릭터 진화 이모지들
+        // 캐릭터 진화 이미지들 (이미지 URL 또는 이모지)
         const characterEvolution = {
-            strength: ['🐱', '😸', '😺', '🙀', '😻', '😽', '🐯', '🦁', '👑🐯', '🔥🦁'],
-            intelligence: ['🐻', '🐼', '🧸', '🤓🐻', '📚🐼', '🎓🧸', '🧠🐻', '👨‍🎓🐼', '🏆🧸', '🌟🧠']
+            strength: [
+                'https://example.com/cat1.jpg',  // 레벨 1: 쭈글 고양이
+                'https://example.com/cat2.jpg',  // 레벨 2: 귀여운 고양이
+                '😺',  // 레벨 3: 웃는 고양이 (이모지도 가능)
+                '🙀',  // 레벨 4: 놀란 고양이
+                '😻',  // 레벨 5: 사랑 고양이
+                '😽',  // 레벨 6: 키스 고양이
+                '🐯',  // 레벨 7: 호랑이
+                '🦁',  // 레벨 8: 사자
+                '👑🐯', // 레벨 9: 왕관 호랑이
+                '🔥🦁'  // 레벨 10: 불꽃 사자
+            ],
+            intelligence: [
+                'https://example.com/bear1.jpg', // 레벨 1: 졸린 곰
+                'https://example.com/bear2.jpg', // 레벨 2: 판다곰
+                '🧸',  // 레벨 3: 테디베어
+                '🤓🐻', // 레벨 4: 공부곰
+                '📚🐼', // 레벨 5: 책읽는 판다
+                '🎓🧸', // 레벨 6: 졸업곰
+                '🧠🐻', // 레벨 7: 천재곰
+                '👨‍🎓🐼', // 레벨 8: 박사 판다
+                '🏆🧸', // 레벨 9: 우승곰
+                '🌟🧠'  // 레벨 10: 별빛 천재
+            ]
         };
         
         // 캐릭터 이름들
@@ -742,6 +777,21 @@
             updateSyncStatus('✅ 동기화 완료', 'success');
         }
         
+        // 캐릭터 아이콘 업데이트 함수
+        function updateCharacterIcon(elementId, imageUrlOrEmoji) {
+            const element = document.getElementById(elementId);
+            
+            // URL인지 확인 (http로 시작하거나 .jpg, .png 등 포함)
+            if (imageUrlOrEmoji.startsWith('http') || imageUrlOrEmoji.includes('.jpg') || imageUrlOrEmoji.includes('.png') || imageUrlOrEmoji.includes('.gif')) {
+                // 이미지인 경우
+                element.innerHTML = `<img src="${imageUrlOrEmoji}" alt="캐릭터" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                element.className = 'character-icon';
+            } else {
+                // 이모지인 경우
+                element.textContent = imageUrlOrEmoji;
+                element.className = 'character-icon emoji';
+            }
+        }
         // 화면 업데이트
         function updateDisplay() {
             const userData = gameData[currentUser];
@@ -751,7 +801,7 @@
             const strengthPoints = userData.strength.points;
             const strengthProgress = (strengthPoints / 50) * 100;
             
-            document.getElementById('strength-char').textContent = characterEvolution.strength[strengthLevel - 1];
+            updateCharacterIcon('strength-char', characterEvolution.strength[strengthLevel - 1]);
             document.getElementById('strength-name').textContent = characterNames.strength[strengthLevel - 1];
             document.getElementById('strength-level').textContent = `레벨 ${strengthLevel}`;
             document.getElementById('strength-progress').style.width = `${strengthProgress}%`;
@@ -762,7 +812,7 @@
             const intelligencePoints = userData.intelligence.points;
             const intelligenceProgress = (intelligencePoints / 50) * 100;
             
-            document.getElementById('intelligence-char').textContent = characterEvolution.intelligence[intelligenceLevel - 1];
+            updateCharacterIcon('intelligence-char', characterEvolution.intelligence[intelligenceLevel - 1]);
             document.getElementById('intelligence-name').textContent = characterNames.intelligence[intelligenceLevel - 1];
             document.getElementById('intelligence-level').textContent = `레벨 ${intelligenceLevel}`;
             document.getElementById('intelligence-progress').style.width = `${intelligenceProgress}%`;
