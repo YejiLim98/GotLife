@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자기계발 캐릭터 성장</title>
+    <title>CORS 해결 - 자기계발 앱</title>
     <style>
         * {
             margin: 0;
@@ -61,40 +61,15 @@
             color: #ef6c00;
         }
         
-        .config-section {
-            background: #f5f5f5;
+        .proxy-info {
+            background: #e3f2fd;
+            border: 1px solid #2196F3;
             border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .config-section h3 {
-            margin-bottom: 10px;
-            color: #333;
-            font-size: 16px;
-        }
-        
-        .config-btn {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-right: 10px;
-        }
-        
-        .config-btn:hover {
-            background: #45a049;
-        }
-        
-        .config-btn.secondary {
-            background: #2196F3;
-        }
-        
-        .config-btn.secondary:hover {
-            background: #1976D2;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #1565c0;
+            text-align: center;
         }
         
         .characters {
@@ -120,9 +95,6 @@
             object-fit: cover;
             background: #f0f0f0;
             border: 2px solid #ddd;
-        }
-        
-        .character-icon.emoji {
             font-size: 40px;
             line-height: 56px;
             text-align: center;
@@ -273,10 +245,6 @@
             margin-top: 10px;
         }
         
-        .hidden {
-            display: none;
-        }
-        
         .user-label {
             font-size: 16px;
             font-weight: bold;
@@ -291,26 +259,21 @@
             <h1>🌟 자기계발 캐릭터 성장 🌟</h1>
         </div>
         
-        <div id="config-section" class="config-section hidden">
-            <h3>📊 구글 시트 연동 상태</h3>
-            <p style="font-size: 14px; color: #666; margin-bottom: 10px;">
-                ✅ 완전 연동 설정 완료<br>
-                📊 시트: GotLife 데이터<br>
-                🔗 API: 자동 연결됨
-            </p>
-            <button class="config-btn secondary" onclick="forceSync()">🔄 수동 동기화</button>
-            <button class="config-btn secondary" onclick="toggleConfigSection()">⚙️ 설정 숨기기</button>
+        <div class="proxy-info">
+            🛡️ CORS Proxy 사용 중<br>
+            📡 allorigins.win을 통해 우회 접속<br>
+            🔄 Google Sheets 연동 활성화
         </div>
         
-        <div id="sync-status" class="sync-status success">
-            ✅ 앱 준비 완료 - 데이터 로딩 중...
+        <div id="sync-status" class="sync-status">
+            ✅ 시스템 준비 완료 - 데이터 로딩 중...
         </div>
         
         <div id="app-content">
             <div class="characters">
                 <div class="character">
                     <div class="user-label">👑 예지</div>
-                    <div class="character-icon emoji" id="yeji-char">🐱</div>
+                    <div class="character-icon" id="yeji-char">🐱</div>
                     <div class="character-name" id="yeji-name">쭈글 캐릭터</div>
                     <div class="character-level" id="yeji-level">레벨 1</div>
                     <div class="progress-bar">
@@ -321,7 +284,7 @@
                 
                 <div class="character">
                     <div class="user-label">👑 이지</div>
-                    <div class="character-icon emoji" id="izi-char">🐱</div>
+                    <div class="character-icon" id="izi-char">🐱</div>
                     <div class="character-name" id="izi-name">쭈글 캐릭터</div>
                     <div class="character-level" id="izi-level">레벨 1</div>
                     <div class="progress-bar">
@@ -389,14 +352,13 @@
     <div id="notification" class="notification"></div>
     
     <script>
-        // 고정된 구글 시트 설정
-        const FIXED_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1wQZD2MxqovNA4zz2lKpPb57YJXmzON0Zv_P2SRJYW-Y/edit?usp=sharing';
-        const FIXED_SHEET_ID = '1wQZD2MxqovNA4zz2lKpPb57YJXmzON0Zv_P2SRJYW-Y';
+        // 🛡️ CORS 우회 Proxy 사용
+        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
         
-        // Google Apps Script 웹앱 URL (새로 배포된 URL)
+        // 기존 Google Apps Script URL
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVI7G72DGmJ08XA7XggU2PZ_2G4zlZFlqAYqyVZYH22DyitjoqcSMyWYAWltGvLfcBIQ/exec';
         
-        // 게임 데이터 (통합 시스템)
+        // 게임 데이터
         let gameData = {
             예지: { points: 0, level: 1 },
             이지: { points: 0, level: 1 }
@@ -408,40 +370,68 @@
         
         // 캐릭터 진화 이미지들 (레벨별)
         const characterEvolution = [
-            '🐱',      // 레벨 1: 쭈글 고양이
-            '😸',      // 레벨 2: 웃는 고양이
-            '😺',      // 레벨 3: 행복한 고양이
-            '🙀',      // 레벨 4: 놀란 고양이
-            '😻',      // 레벨 5: 사랑하는 고양이
-            '😽',      // 레벨 6: 키스하는 고양이
-            '🐯',      // 레벨 7: 호랑이
-            '🦁',      // 레벨 8: 사자
-            '👑🐯',    // 레벨 9: 왕관 호랑이
-            '🔥🦁'     // 레벨 10: 불꽃 사자
+            '🐱', '😸', '😺', '🙀', '😻', '😽', '🐯', '🦁', '👑🐯', '🔥🦁'
         ];
         
         // 캐릭터 이름들 (레벨별)
         const characterNames = [
-            '쭈글 캐릭터',      // 레벨 1
-            '귀여운 캐릭터',    // 레벨 2
-            '웃는 캐릭터',      // 레벨 3
-            '놀란 캐릭터',      // 레벨 4
-            '사랑 캐릭터',      // 레벨 5
-            '키스 캐릭터',      // 레벨 6
-            '호랑이',          // 레벨 7
-            '사자',            // 레벨 8
-            '왕관 호랑이',      // 레벨 9
-            '불꽃 사자'        // 레벨 10
+            '쭈글 캐릭터', '귀여운 캐릭터', '웃는 캐릭터', '놀간 캐릭터', '사랑 캐릭터',
+            '키스 캐릭터', '호랑이', '사자', '왕관 호랑이', '불꽃 사자'
         ];
         
-        // 자동 초기화 및 연결
+        // CORS 우회하여 데이터 전송
+        async function sendWithProxy(data) {
+            const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                return result;
+                
+            } catch (error) {
+                console.error('Proxy 전송 오류:', error);
+                throw error;
+            }
+        }
+        
+        // CORS 우회하여 데이터 로드
+        async function loadWithProxy() {
+            const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                return result;
+                
+            } catch (error) {
+                console.error('Proxy 로드 오류:', error);
+                throw error;
+            }
+        }
+        
+        // 초기화
         async function initializeApp() {
-            updateSyncStatus('🔄 구글 시트에서 데이터 로딩 중...', 'loading');
+            updateSyncStatus('🔄 Google Sheets에서 데이터 로딩 중...', 'loading');
             
             try {
                 await loadDataFromSheet();
                 isConnected = true;
-                updateSyncStatus('✅ 완전 연동 - 실시간 읽기/쓰기 가능', 'success');
+                updateSyncStatus('✅ Google Sheets 연동 완료 (Proxy 사용)', 'success');
                 
                 updateDisplay();
                 
@@ -458,33 +448,12 @@
                 
             } catch (error) {
                 console.error('초기 연결 오류:', error);
-                updateSyncStatus('❌ 연결 실패: 시트 권한을 확인해주세요', 'error');
+                updateSyncStatus('❌ 연결 실패: Proxy 또는 스크립트 오류', 'error');
                 isConnected = false;
             }
         }
         
-        // 수동 동기화
-        async function forceSync() {
-            updateSyncStatus('🔄 동기화 중...', 'loading');
-            try {
-                await loadDataFromSheet();
-                updateDisplay();
-                updateSyncStatus('✅ 동기화 완료', 'success');
-                showNotification('최신 데이터로 동기화되었습니다!');
-            } catch (error) {
-                console.error('동기화 오류:', error);
-                updateSyncStatus('❌ 동기화 실패', 'error');
-                showNotification('동기화에 실패했습니다.', 'error');
-            }
-        }
-        
-        // 설정 섹션 토글
-        function toggleConfigSection() {
-            const configSection = document.getElementById('config-section');
-            configSection.classList.toggle('hidden');
-        }
-        
-        // 포인트 추가 (통합 시스템)
+        // 포인트 추가
         async function addPoints(points) {
             const currentUser = document.getElementById('user-select').value;
             const userData = gameData[currentUser];
@@ -501,7 +470,7 @@
             
             userData.points += points;
             
-            // 레벨업 체크 (100점마다)
+            // 레벨업 체크
             while (userData.points >= 100 && userData.level < 10) {
                 userData.level++;
                 userData.points -= 100;
@@ -513,9 +482,85 @@
                 userData.points = Math.min(userData.points, 100);
             }
             
-            await saveDataToSheet();
-            updateDisplay();
-            showNotification(`${currentUser}가 +${points} 포인트 획득!`);
+            try {
+                await saveDataToSheet();
+                updateDisplay();
+                showNotification(`${currentUser}가 +${points} 포인트 획득!`);
+            } catch (error) {
+                // 저장 실패시 롤백
+                userData.level = oldLevel;
+                userData.points = oldPoints;
+                showNotification('저장에 실패했습니다. 다시 시도해주세요.', 'error');
+                updateDisplay();
+            }
+        }
+        
+        // Google Sheets에 데이터 저장 (Proxy 사용)
+        async function saveDataToSheet() {
+            if (!isConnected) {
+                console.log('Google Sheets에 연결되지 않았습니다.');
+                return;
+            }
+            
+            try {
+                const result = await sendWithProxy({
+                    예지_points: gameData['예지'].points,
+                    예지_level: gameData['예지'].level,
+                    이지_points: gameData['이지'].points,
+                    이지_level: gameData['이지'].level
+                });
+                
+                if (result.success) {
+                    console.log('Google Sheets 저장 성공 (Proxy 사용)');
+                } else {
+                    console.error('Google Sheets 저장 실패:', result.error);
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Proxy 저장 오류:', error);
+                throw error;
+            }
+        }
+        
+        // Google Sheets에서 데이터 로드 (Proxy 사용)
+        async function loadDataFromSheet() {
+            console.log('데이터 로드 시작 (Proxy 사용)...');
+            
+            try {
+                const result = await loadWithProxy();
+                console.log('Proxy 응답:', result);
+                
+                if (result.success && result.data) {
+                    const rows = result.data;
+                    console.log('파싱된 행들:', rows);
+                    
+                    // 헤더 제거
+                    if (rows.length > 1) {
+                        rows.shift();
+                    }
+                    
+                    // 데이터 파싱
+                    rows.forEach((row, index) => {
+                        console.log(`행 ${index}:`, row);
+                        if (row.length >= 3) {
+                            const [user, points, level] = row;
+                            console.log(`처리 중: ${user}, ${points}, ${level}`);
+                            
+                            if (gameData[user]) {
+                                gameData[user].points = parseInt(points) || 0;
+                                gameData[user].level = parseInt(level) || 1;
+                                console.log(`업데이트 완료: ${user}`);
+                            }
+                        }
+                    });
+                    
+                    console.log('최종 게임 데이터:', gameData);
+                }
+                
+            } catch (error) {
+                console.error('Proxy 데이터 로드 오류:', error);
+                throw error;
+            }
         }
         
         // 마지막 행동 되돌리기
@@ -529,29 +574,17 @@
             userData.level = lastAction.oldLevel;
             userData.points = lastAction.oldPoints;
             
-            await saveDataToSheet();
-            updateDisplay();
-            showNotification('마지막 행동이 취소되었습니다.');
-            lastAction = null;
-        }
-        
-        // 캐릭터 아이콘 업데이트 함수
-        function updateCharacterIcon(elementId, imageUrlOrEmoji) {
-            const element = document.getElementById(elementId);
-            
-            // URL인지 확인 (http로 시작하거나 .jpg, .png 등 포함)
-            if (imageUrlOrEmoji.startsWith('http') || imageUrlOrEmoji.includes('.jpg') || imageUrlOrEmoji.includes('.png') || imageUrlOrEmoji.includes('.gif')) {
-                // 이미지인 경우
-                element.innerHTML = `<img src="${imageUrlOrEmoji}" alt="캐릭터" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                element.className = 'character-icon';
-            } else {
-                // 이모지인 경우
-                element.textContent = imageUrlOrEmoji;
-                element.className = 'character-icon emoji';
+            try {
+                await saveDataToSheet();
+                updateDisplay();
+                showNotification('마지막 행동이 취소되었습니다.');
+                lastAction = null;
+            } catch (error) {
+                showNotification('취소에 실패했습니다.', 'error');
             }
         }
         
-        // 화면 업데이트 (통합 시스템)
+        // 화면 업데이트
         function updateDisplay() {
             // 예지 캐릭터 업데이트
             const yejiData = gameData['예지'];
@@ -559,7 +592,7 @@
             const yejiPoints = yejiData.points;
             const yejiProgress = (yejiPoints / 100) * 100;
             
-            updateCharacterIcon('yeji-char', characterEvolution[yejiLevel - 1]);
+            document.getElementById('yeji-char').textContent = characterEvolution[yejiLevel - 1];
             document.getElementById('yeji-name').textContent = characterNames[yejiLevel - 1];
             document.getElementById('yeji-level').textContent = `레벨 ${yejiLevel}`;
             document.getElementById('yeji-progress').style.width = `${yejiProgress}%`;
@@ -571,97 +604,11 @@
             const iziPoints = iziData.points;
             const iziProgress = (iziPoints / 100) * 100;
             
-            updateCharacterIcon('izi-char', characterEvolution[iziLevel - 1]);
+            document.getElementById('izi-char').textContent = characterEvolution[iziLevel - 1];
             document.getElementById('izi-name').textContent = characterNames[iziLevel - 1];
             document.getElementById('izi-level').textContent = `레벨 ${iziLevel}`;
             document.getElementById('izi-progress').style.width = `${iziProgress}%`;
             document.getElementById('izi-text').textContent = `${iziPoints}/100`;
-        }
-        
-        // 구글 시트에서 데이터 로드 (통합 시스템)
-        async function loadDataFromSheet() {
-            console.log('데이터 로드 시작...');
-            const csvUrl = `https://docs.google.com/spreadsheets/d/${FIXED_SHEET_ID}/export?format=csv`;
-            
-            try {
-                console.log('CSV URL:', csvUrl);
-                const response = await fetch(csvUrl);
-                console.log('응답 상태:', response.status);
-                
-                if (!response.ok) {
-                    throw new Error('시트 접근 불가: ' + response.status);
-                }
-                
-                const csvText = await response.text();
-                console.log('CSV 데이터:', csvText);
-                
-                const rows = csvText.trim().split('\n').map(row => {
-                    return row.split(',').map(cell => cell.trim().replace(/"/g, ''));
-                });
-                
-                console.log('파싱된 행들:', rows);
-                
-                // 헤더 제거
-                if (rows.length > 1) {
-                    rows.shift();
-                    console.log('헤더 제거 후:', rows);
-                }
-                
-                // 데이터 파싱 (통합 시스템용)
-                rows.forEach((row, index) => {
-                    console.log(`행 ${index}:`, row);
-                    if (row.length >= 3) {
-                        const [user, points, level] = row;
-                        console.log(`처리 중: ${user}, ${points}, ${level}`);
-                        
-                        if (gameData[user]) {
-                            gameData[user].points = parseInt(points) || 0;
-                            gameData[user].level = parseInt(level) || 1;
-                            console.log(`업데이트 완료: ${user}`);
-                        } else {
-                            console.log(`데이터 구조 불일치: ${user}`);
-                        }
-                    }
-                });
-                
-                console.log('최종 게임 데이터:', gameData);
-                
-            } catch (error) {
-                console.error('데이터 로드 오류:', error);
-                throw error;
-            }
-        }
-        
-        // 구글 시트에 데이터 저장 (통합 시스템)
-        async function saveDataToSheet() {
-            if (!isConnected) {
-                console.log('시트에 연결되지 않았습니다.');
-                return;
-            }
-            
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        예지_points: gameData['예지'].points,
-                        예지_level: gameData['예지'].level,
-                        이지_points: gameData['이지'].points,
-                        이지_level: gameData['이지'].level
-                    })
-                });
-                
-                const result = await response.json();
-                if (result.success) {
-                    console.log('구글 시트 저장 성공');
-                } else {
-                    console.error('구글 시트 저장 실패:', result.error);
-                }
-            } catch (error) {
-                console.error('Apps Script 호출 오류:', error);
-            }
         }
         
         // 동기화 상태 업데이트
@@ -693,58 +640,26 @@
                 이지: { points: 0, level: 1 }
             };
             
-            await saveDataToSheet();
-            updateDisplay();
-            showNotification('진행상황이 초기화되었습니다.');
-        }
-        
-        // 초기화 (강력한 버전)
-        function startApp() {
-            console.log('앱 시작 시도...');
-            
-            // DOM 요소들이 존재하는지 확인
-            const appContent = document.getElementById('app-content');
-            const syncStatus = document.getElementById('sync-status');
-            
-            if (appContent && syncStatus) {
-                // 상태 업데이트
-                syncStatus.textContent = '✅ 앱 시작됨 - 데이터 로딩 중...';
-                syncStatus.className = 'sync-status success';
-                
-                // 실제 초기화 실행
-                try {
-                    initializeApp();
-                } catch (error) {
-                    console.error('초기화 오류:', error);
-                    setTimeout(startApp, 1000); // 1초 후 재시도
-                }
-            } else {
-                console.log('DOM 요소를 찾을 수 없음, 0.5초 후 재시도...');
-                setTimeout(startApp, 500);
+            try {
+                await saveDataToSheet();
+                updateDisplay();
+                showNotification('진행상황이 초기화되었습니다.');
+            } catch (error) {
+                showNotification('초기화에 실패했습니다.', 'error');
             }
         }
         
-        // 즉시 실행 함수로 강제 시작
-        (function() {
-            console.log('즉시 실행 함수 시작');
-            setTimeout(startApp, 100); // 0.1초 후 실행
-        })();
+        // 앱 시작
+        function startApp() {
+            initializeApp();
+        }
         
-        // DOM 준비 시 실행
+        // DOM 준비되면 시작
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', startApp);
         } else {
-            console.log('DOM 이미 준비됨, 즉시 실행');
             startApp();
         }
-        
-        // window load 이벤트
-        window.addEventListener('load', startApp);
-        
-        // 강력한 백업 실행들
-        setTimeout(startApp, 500);
-        setTimeout(startApp, 1000);
-        setTimeout(startApp, 2000);
     </script>
 </body>
 </html>
