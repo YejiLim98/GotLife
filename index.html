@@ -3,16 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자기계발 앱 - 디버그 버전</title>
+    <title>자기계발 앱 - 디버그 강화 버전</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 10px;
@@ -27,60 +21,12 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .debug-section {
+        .status {
             background: #f8f9fa;
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 20px;
             border-left: 4px solid #2196F3;
-        }
-        
-        .debug-title {
-            font-weight: bold;
-            color: #1976D2;
-            margin-bottom: 10px;
-        }
-        
-        .debug-info {
-            font-size: 12px;
-            color: #666;
-            background: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-        }
-        
-        .test-button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-            font-size: 12px;
-        }
-        
-        .test-button:hover {
-            background: #45a049;
-        }
-        
-        .error {
-            background: #ffebee;
-            color: #c62828;
-            border-left-color: #f44336;
-        }
-        
-        .success {
-            background: #e8f5e8;
-            color: #2e7d32;
-            border-left-color: #4CAF50;
         }
         
         .log-area {
@@ -95,10 +41,24 @@
             margin: 10px 0;
         }
         
+        .test-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .test-btn:hover {
+            background: #45a049;
+        }
+        
         .characters {
             display: flex;
             gap: 15px;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
         
         .character {
@@ -114,23 +74,12 @@
             margin-bottom: 10px;
         }
         
-        .character-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .character-level {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-        
         .progress-bar {
             background: #e0e0e0;
             border-radius: 10px;
             height: 8px;
             overflow: hidden;
-            margin-bottom: 5px;
+            margin: 10px 0;
         }
         
         .progress-fill {
@@ -138,130 +87,65 @@
             background: linear-gradient(90deg, #4CAF50, #45a049);
             transition: width 0.3s ease;
         }
-        
-        .progress-text {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .action-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-            font-size: 12px;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .notification.show {
-            opacity: 1;
-        }
-        
-        .notification.error {
-            background: #f44336;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🔧 자기계발 앱 - 디버그 모드</h1>
+        <h1>🔧 자기계발 앱 - 디버그 강화 버전</h1>
+        
+        <div class="status">
+            <h3>🔗 연결 상태</h3>
+            <div id="connection-status">확인 중...</div>
+            <button class="test-btn" onclick="testConnection()">연결 테스트</button>
+            <button class="test-btn" onclick="testPostData()">POST 데이터 테스트</button>
+            <button class="test-btn" onclick="manualUpdate()">수동 업데이트 테스트</button>
         </div>
         
-        <div class="debug-section">
-            <div class="debug-title">🔍 연결 상태 진단</div>
-            <div id="connection-status" class="debug-info">
-                준비 중...
-            </div>
-            <button class="test-button" onclick="testDirectConnection()">직접 연결 테스트</button>
-            <button class="test-button" onclick="testProxy1()">Proxy #1 테스트</button>
-            <button class="test-button" onclick="testProxy2()">Proxy #2 테스트</button>
-            <button class="test-button" onclick="testProxy3()">Proxy #3 테스트</button>
-        </div>
-        
-        <div class="debug-section">
-            <div class="debug-title">📋 설정 정보</div>
-            <div class="debug-info">
-                <strong>Apps Script URL:</strong><br>
-                <span id="script-url">로딩 중...</span>
-            </div>
-            <div class="debug-info">
-                <strong>현재 사용 중인 방법:</strong><br>
-                <span id="current-method">확인 중...</span>
-            </div>
-        </div>
-        
-        <div class="debug-section">
-            <div class="debug-title">📊 실시간 로그</div>
+        <div class="status">
+            <h3>📊 실시간 로그</h3>
             <div id="log-area" class="log-area">
                 [시스템] 디버그 모드 시작...\n
             </div>
-            <button class="test-button" onclick="clearLog()">로그 지우기</button>
+            <button class="test-btn" onclick="clearLog()">로그 지우기</button>
         </div>
         
         <div class="characters">
             <div class="character">
+                <div>👑 예지</div>
                 <div class="character-icon" id="yeji-char">🐱</div>
-                <div class="character-name" id="yeji-name">쭈글 캐릭터</div>
-                <div class="character-level" id="yeji-level">레벨 1</div>
+                <div id="yeji-level">레벨 1</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="yeji-progress" style="width: 0%"></div>
                 </div>
-                <div class="progress-text" id="yeji-text">0/100</div>
+                <div id="yeji-text">0/100</div>
             </div>
             
             <div class="character">
+                <div>👑 이지</div>
                 <div class="character-icon" id="izi-char">🐱</div>
-                <div class="character-name" id="izi-name">쭈글 캐릭터</div>
-                <div class="character-level" id="izi-level">레벨 1</div>
+                <div id="izi-level">레벨 1</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="izi-progress" style="width: 0%"></div>
                 </div>
-                <div class="progress-text" id="izi-text">0/100</div>
+                <div id="izi-text">0/100</div>
             </div>
         </div>
         
-        <div style="text-align: center; margin: 20px 0;">
-            <button class="action-btn" onclick="testAddPoints()">포인트 추가 테스트 (+5)</button>
+        <div style="text-align: center;">
+            <button class="test-btn" onclick="addTestPoints()">+5 포인트 테스트</button>
+            <select id="user-select">
+                <option value="예지">예지</option>
+                <option value="이지">이지</option>
+            </select>
         </div>
     </div>
     
-    <div id="notification" class="notification"></div>
-    
     <script>
-        // 여러 Apps Script URL 후보들 (실제 URL로 교체 필요)
-        const APPS_SCRIPT_URLS = [
-            'https://script.google.com/macros/s/AKfycbxVI7G72DGmJ08XA7XggU2PZ_2G4zlZFlqAYqyVZYH22DyitjoqcSMyWYAWltGvLfcBIQ/exec',
-            // 다른 배포 URL이 있다면 여기 추가
-        ];
+        // ⭐ 새로운 Apps Script URL을 여기에 넣으세요!
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_NEW_DEPLOYMENT_URL_HERE/exec';
         
-        // 여러 Proxy 서비스들
-        const PROXY_SERVICES = [
-            { name: 'AllOrigins', url: 'https://api.allorigins.win/raw?url=' },
-            { name: 'ThingProxy', url: 'https://thingproxy.freeboard.io/fetch/' },
-            { name: 'CORS.SH', url: 'https://cors.sh/' },
-            { name: 'CORS Anywhere', url: 'https://cors-anywhere.herokuapp.com/' }
-        ];
-        
-        let currentScriptURL = APPS_SCRIPT_URLS[0];
-        let workingProxy = null;
+        // AllOrigins Proxy
+        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
         
         // 게임 데이터
         let gameData = {
@@ -270,13 +154,12 @@
         };
         
         // 로그 함수
-        function addLog(message, type = 'info') {
+        function addLog(message) {
             const logArea = document.getElementById('log-area');
             const timestamp = new Date().toLocaleTimeString();
             const logMessage = `[${timestamp}] ${message}\n`;
             logArea.textContent += logMessage;
             logArea.scrollTop = logArea.scrollHeight;
-            
             console.log(message);
         }
         
@@ -284,122 +167,46 @@
             document.getElementById('log-area').textContent = '[시스템] 로그 지움\n';
         }
         
-        // 직접 연결 테스트
-        async function testDirectConnection() {
-            addLog('🔗 직접 연결 테스트 시작...');
-            updateConnectionStatus('직접 연결 테스트 중...', 'loading');
+        // 연결 테스트
+        async function testConnection() {
+            addLog('🔗 GET 연결 테스트 시작...');
             
             try {
-                const response = await fetch(currentScriptURL, {
-                    method: 'GET',
-                    mode: 'cors'
-                });
+                const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
+                const response = await fetch(url);
+                const result = await response.json();
                 
-                addLog(`✅ 직접 연결 성공! 상태: ${response.status}`);
-                const data = await response.text();
-                addLog(`📄 응답 데이터: ${data.substring(0, 100)}...`);
+                addLog('✅ GET 연결 성공!');
+                addLog(`📄 응답: ${JSON.stringify(result)}`);
                 
-                updateConnectionStatus('직접 연결 성공!', 'success');
-                updateCurrentMethod('직접 연결');
-                workingProxy = null;
-                return true;
+                document.getElementById('connection-status').innerHTML = 
+                    `✅ 연결 성공<br>📅 ${result.timestamp}`;
                 
             } catch (error) {
-                addLog(`❌ 직접 연결 실패: ${error.message}`);
-                updateConnectionStatus('직접 연결 실패 - CORS 에러', 'error');
-                return false;
+                addLog(`❌ GET 연결 실패: ${error.message}`);
+                document.getElementById('connection-status').innerHTML = 
+                    `❌ 연결 실패<br>${error.message}`;
             }
         }
         
-        // Proxy 테스트 함수들
-        async function testProxy1() { await testProxy(0); }
-        async function testProxy2() { await testProxy(1); }
-        async function testProxy3() { await testProxy(2); }
-        
-        async function testProxy(index) {
-            if (index >= PROXY_SERVICES.length) return false;
+        // POST 데이터 테스트 (여러 방법)
+        async function testPostData() {
+            addLog('📤 POST 데이터 테스트 시작...');
             
-            const proxy = PROXY_SERVICES[index];
-            addLog(`🛡️ ${proxy.name} Proxy 테스트 시작...`);
-            updateConnectionStatus(`${proxy.name} 테스트 중...`, 'loading');
+            const testData = {
+                예지_points: 10,
+                예지_level: 1,
+                이지_points: 5,
+                이지_level: 1
+            };
+            
+            addLog(`📦 전송할 데이터: ${JSON.stringify(testData)}`);
             
             try {
-                const proxyURL = proxy.url + encodeURIComponent(currentScriptURL);
-                addLog(`📡 Proxy URL: ${proxyURL}`);
+                // 방법 1: JSON 형태로 전송
+                const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
                 
-                const response = await fetch(proxyURL, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.text();
-                addLog(`✅ ${proxy.name} 연결 성공!`);
-                addLog(`📄 응답 데이터: ${data.substring(0, 100)}...`);
-                
-                updateConnectionStatus(`${proxy.name} 연결 성공!`, 'success');
-                updateCurrentMethod(`${proxy.name} Proxy`);
-                workingProxy = proxy;
-                return true;
-                
-            } catch (error) {
-                addLog(`❌ ${proxy.name} 실패: ${error.message}`);
-                updateConnectionStatus(`${proxy.name} 실패`, 'error');
-                return false;
-            }
-        }
-        
-        // 자동 연결 테스트
-        async function autoTestConnections() {
-            addLog('🚀 자동 연결 테스트 시작...');
-            
-            // 1. 직접 연결 시도
-            if (await testDirectConnection()) {
-                addLog('🎉 직접 연결 성공! Proxy 불필요');
-                return true;
-            }
-            
-            // 2. 모든 Proxy 시도
-            for (let i = 0; i < PROXY_SERVICES.length; i++) {
-                if (await testProxy(i)) {
-                    addLog(`🎉 ${PROXY_SERVICES[i].name} Proxy로 연결 성공!`);
-                    return true;
-                }
-                await new Promise(resolve => setTimeout(resolve, 1000)); // 1초 대기
-            }
-            
-            addLog('😞 모든 연결 방법 실패');
-            updateConnectionStatus('모든 연결 방법 실패', 'error');
-            return false;
-        }
-        
-        // 실제 데이터 전송 테스트
-        async function testAddPoints() {
-            if (!workingProxy && !await testDirectConnection()) {
-                showNotification('연결이 설정되지 않았습니다. 먼저 연결 테스트를 해주세요.', 'error');
-                return;
-            }
-            
-            addLog('📤 포인트 추가 테스트 시작...');
-            
-            try {
-                const testData = {
-                    예지_points: 5,
-                    예지_level: 1,
-                    이지_points: 0,
-                    이지_level: 1
-                };
-                
-                let url = currentScriptURL;
-                if (workingProxy) {
-                    url = workingProxy.url + encodeURIComponent(currentScriptURL);
-                    addLog(`🛡️ ${workingProxy.name} Proxy 사용`);
-                }
+                addLog('🛡️ Proxy를 통한 POST 요청...');
                 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -414,67 +221,135 @@
                 }
                 
                 const result = await response.json();
-                addLog(`✅ 포인트 추가 성공!`);
-                addLog(`📄 서버 응답: ${JSON.stringify(result)}`);
                 
+                addLog('✅ POST 요청 성공!');
+                addLog(`📄 서버 응답: ${JSON.stringify(result, null, 2)}`);
+                
+                // 응답 분석
                 if (result.success) {
-                    gameData.예지.points = 5;
-                    updateDisplay();
-                    showNotification('포인트 추가 성공!');
+                    addLog('🎉 서버가 성공 응답!');
+                    if (result.debugInfo) {
+                        addLog(`🔍 디버그 정보: ${JSON.stringify(result.debugInfo)}`);
+                    }
+                    if (result.debugInfo && result.debugInfo.updateCount > 0) {
+                        addLog(`💾 ${result.debugInfo.updateCount}개 데이터 업데이트됨`);
+                        // 게임 데이터 업데이트
+                        gameData.예지.points = testData.예지_points;
+                        gameData.이지.points = testData.이지_points;
+                        updateDisplay();
+                    } else {
+                        addLog('⚠️ 업데이트된 데이터가 없음 - 스프레드시트 확인 필요');
+                    }
                 } else {
-                    throw new Error(result.error || '서버에서 오류 응답');
+                    addLog(`❌ 서버 오류: ${result.error}`);
                 }
                 
             } catch (error) {
-                addLog(`❌ 포인트 추가 실패: ${error.message}`);
-                showNotification('포인트 추가 실패: ' + error.message, 'error');
+                addLog(`❌ POST 요청 실패: ${error.message}`);
             }
         }
         
-        // UI 업데이트 함수들
-        function updateConnectionStatus(message, type) {
-            const statusElement = document.getElementById('connection-status');
-            statusElement.textContent = message;
-            statusElement.className = `debug-info ${type}`;
+        // URL 파라미터 방식 테스트
+        async function manualUpdate() {
+            addLog('🔧 URL 파라미터 방식 테스트...');
+            
+            try {
+                // URL 파라미터로 데이터 전송
+                const params = new URLSearchParams({
+                    예지_points: 15,
+                    예지_level: 1,
+                    이지_points: 8,
+                    이지_level: 1
+                });
+                
+                const urlWithParams = APPS_SCRIPT_URL + '?' + params.toString();
+                const proxyUrl = CORS_PROXY + encodeURIComponent(urlWithParams);
+                
+                addLog(`📡 URL: ${urlWithParams}`);
+                
+                const response = await fetch(proxyUrl, { method: 'POST' });
+                const result = await response.json();
+                
+                addLog('✅ URL 파라미터 방식 완료!');
+                addLog(`📄 응답: ${JSON.stringify(result, null, 2)}`);
+                
+            } catch (error) {
+                addLog(`❌ URL 파라미터 방식 실패: ${error.message}`);
+            }
         }
         
-        function updateCurrentMethod(method) {
-            document.getElementById('current-method').textContent = method;
+        // 간단한 포인트 추가 테스트
+        async function addTestPoints() {
+            const currentUser = document.getElementById('user-select').value;
+            const userData = gameData[currentUser];
+            
+            addLog(`🎮 ${currentUser}에게 +5 포인트 추가 테스트...`);
+            
+            userData.points += 5;
+            
+            const testData = {
+                예지_points: gameData.예지.points,
+                예지_level: gameData.예지.level,
+                이지_points: gameData.이지.points,
+                이지_level: gameData.이지.level
+            };
+            
+            try {
+                const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.debugInfo && result.debugInfo.updateCount > 0) {
+                    addLog(`🎉 ${currentUser} +5 포인트 성공!`);
+                    updateDisplay();
+                } else {
+                    addLog(`⚠️ 포인트 추가 실패 - 스프레드시트 미반영`);
+                    // 롤백
+                    userData.points -= 5;
+                    updateDisplay();
+                }
+                
+                addLog(`📄 서버 응답: ${JSON.stringify(result)}`);
+                
+            } catch (error) {
+                addLog(`❌ 포인트 추가 실패: ${error.message}`);
+                userData.points -= 5;
+                updateDisplay();
+            }
         }
         
+        // 화면 업데이트
         function updateDisplay() {
-            // 예지 캐릭터 업데이트
-            const yejiData = gameData['예지'];
+            // 예지
+            const yejiData = gameData.예지;
+            document.getElementById('yeji-level').textContent = `레벨 ${yejiData.level}`;
             document.getElementById('yeji-text').textContent = `${yejiData.points}/100`;
             document.getElementById('yeji-progress').style.width = `${(yejiData.points / 100) * 100}%`;
             
-            // 이지 캐릭터 업데이트
-            const iziData = gameData['이지'];
+            // 이지
+            const iziData = gameData.이지;
+            document.getElementById('izi-level').textContent = `레벨 ${iziData.level}`;
             document.getElementById('izi-text').textContent = `${iziData.points}/100`;
             document.getElementById('izi-progress').style.width = `${(iziData.points / 100) * 100}%`;
         }
         
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification show ${type}`;
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-        
         // 초기화
         function initialize() {
-            addLog('🔧 디버그 모드 초기화...');
-            document.getElementById('script-url').textContent = currentScriptURL;
-            updateCurrentMethod('미설정');
+            addLog('🚀 디버그 모드 초기화 완료');
+            updateDisplay();
             
-            // 자동으로 연결 테스트 시작
-            setTimeout(autoTestConnections, 1000);
+            // 자동으로 연결 테스트
+            setTimeout(testConnection, 1000);
         }
         
-        // 페이지 로드 시 실행
+        // 시작
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initialize);
         } else {
