@@ -1,675 +1,719 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자기계발 앱 - URL 파라미터 방식</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 10px;
-        }
-        
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        
-        .header h1 {
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .sync-status {
-            background: #e8f5e8;
-            border: 1px solid #4CAF50;
-            border-radius: 10px;
-            padding: 8px;
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 12px;
-            color: #2e7d32;
-        }
-        
-        .sync-status.error {
-            background: #ffebee;
-            border-color: #f44336;
-            color: #c62828;
-        }
-        
-        .sync-status.loading {
-            background: #fff3e0;
-            border-color: #ff9800;
-            color: #ef6c00;
-        }
-        
-        .characters {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .character {
-            flex: 1;
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-        }
-        
-        .character-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-        
-        .character-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        
-        .character-level {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-        
-        .progress-bar {
-            background: #e0e0e0;
-            border-radius: 10px;
-            height: 8px;
-            overflow: hidden;
-            margin-bottom: 5px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #45a049);
-            transition: width 0.3s ease;
-        }
-        
-        .progress-text {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .actions {
-            margin-bottom: 20px;
-        }
-        
-        .action-category {
-            margin-bottom: 20px;
-        }
-        
-        .category-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            text-align: center;
-        }
-        
-        .category-title.strength {
-            background: #ffebee;
-            color: #c62828;
-        }
-        
-        .category-title.intelligence {
-            background: #e3f2fd;
-            color: #1565c0;
-        }
-        
-        .action-buttons {
-            display: grid;
-            gap: 10px;
-        }
-        
-        .action-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .action-btn:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
-        }
-        
-        .action-btn:active {
-            transform: translateY(0);
-        }
-        
-        .points {
-            background: #4CAF50;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 15px;
-            font-size: 12px;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 1000;
-        }
-        
-        .notification.show {
-            opacity: 1;
-        }
-        
-        .notification.error {
-            background: #f44336;
-        }
-        
-        .reset-btn, .undo-btn {
-            width: 100%;
-            border: none;
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        
-        .reset-btn {
-            background: #ff4757;
-            color: white;
-        }
-        
-        .undo-btn {
-            background: #ffa502;
-            color: white;
-        }
-        
-        .user-label {
-            font-size: 16px;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-        
-        .debug-info {
-            background: #f8f9fa;
-            border-radius: 5px;
-            padding: 8px;
-            margin: 10px 0;
-            font-size: 11px;
-            color: #666;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자기계발 앱 - URL 파라미터 방식</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .sync-status {
+            background: #e8f5e8;
+            border: 1px solid #4CAF50;
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #2e7d32;
+        }
+        
+        .sync-status.error {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+        
+        .sync-status.loading {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #ef6c00;
+        }
+        
+        .characters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .character {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        /* 캐릭터 이미지 스타일 (이모티콘 대신 이미지로 변경) */
+        .character-img {
+            width: 80px; /* 이미지 크기 조절 */
+            height: 80px;
+            object-fit: contain; /* 이미지가 잘리지 않고 프레임에 맞게 조절 */
+            margin-bottom: 10px;
+            border-radius: 50%; /* 이미지를 원형으로 만들고 싶다면 */
+            border: 2px solid #ddd;
+        }
+        
+        .character-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        /* 대사 추가 */
+        .character-dialogue {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+            min-height: 1.2em; /* 대사가 없을 때 공간 확보 */
+        }
+
+        /* 유튜브 링크 스타일 */
+        .character-youtube {
+            font-size: 0.8em;
+            margin-top: 5px;
+            min-height: 1em; /* 링크가 없을 때 공간 확보 */
+        }
+        .character-youtube a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .character-youtube a:hover {
+            text-decoration: underline;
+        }
+        
+        .character-level {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .actions {
+            margin-bottom: 20px;
+        }
+        
+        .action-category {
+            margin-bottom: 20px;
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .category-title.strength {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .category-title.intelligence {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .action-buttons {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .action-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        .action-btn:active {
+            transform: translateY(0);
+        }
+        
+        .points {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        .notification.error {
+            background: #f44336;
+        }
+        
+        .reset-btn, .undo-btn {
+            width: 100%;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .reset-btn {
+            background: #ff4757;
+            color: white;
+        }
+        
+        .undo-btn {
+            background: #ffa502;
+            color: white;
+        }
+        
+        .user-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .debug-info {
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 11px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🌟 자기계발 캐릭터 성장 🌟</h1>
-        </div>
-        
-        <div id="sync-status" class="sync-status">
-            🔄 URL 파라미터 방식으로 연결 중...
-        </div>
-        
-        <div class="debug-info" id="debug-info">
-            연결 방식: URL 파라미터 + Proxy<br>
-            상태: 준비 중...
-        </div>
-        
-        <div id="app-content">
-            <div class="characters">
-                <div class="character">
-                    <div class="user-label">👑 예지</div>
-                    <div class="character-icon" id="yeji-char">🐱</div>
-                    <div class="character-name" id="yeji-name">쭈글 캐릭터</div>
-                    <div class="character-level" id="yeji-level">레벨 1</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="yeji-progress" style="width: 0%"></div>
-                    </div>
-                    <div class="progress-text" id="yeji-text">0/100</div>
-                </div>
-                
-                <div class="character">
-                    <div class="user-label">👑 이지</div>
-                    <div class="character-icon" id="izi-char">🐱</div>
-                    <div class="character-name" id="izi-name">쭈글 캐릭터</div>
-                    <div class="character-level" id="izi-level">레벨 1</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="izi-progress" style="width: 0%"></div>
-                    </div>
-                    <div class="progress-text" id="izi-text">0/100</div>
-                </div>
-            </div>
-            
-            <div class="actions">
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <label for="user-select" style="font-weight: bold; margin-right: 10px;">누가 활동했나요?</label>
-                    <select id="user-select" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; font-size: 14px;">
-                        <option value="예지">예지</option>
-                        <option value="이지">이지</option>
-                    </select>
-                </div>
-                
-                <div class="action-category">
-                    <div class="category-title strength">💪 근력 활동</div>
-                    <div class="action-buttons">
-                        <button class="action-btn" onclick="addPoints(15)">
-                            <span>🏋️ 헬스장 운동 (1시간)</span>
-                            <span class="points">+15</span>
-                        </button>
-                        <button class="action-btn" onclick="addPoints(15)">
-                            <span>💃 연습실 댄스 (1시간)</span>
-                            <span class="points">+15</span>
-                        </button>
-                        <button class="action-btn" onclick="addPoints(15)">
-                            <span>🏊 수영 1회</span>
-                            <span class="points">+15</span>
-                        </button>
-                        <button class="action-btn" onclick="addPoints(10)">
-                            <span>🚶 걷기 (1시간)</span>
-                            <span class="points">+10</span>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="action-category">
-                    <div class="category-title intelligence">🧠 지력 활동</div>
-                    <div class="action-buttons">
-                        <button class="action-btn" onclick="addPoints(5)">
-                            <span>📚 전공공부 (10분)</span>
-                            <span class="points">+5</span>
-                        </button>
-                        <button class="action-btn" onclick="addPoints(2)">
-                            <span>🎨 취미공부 (10분)</span>
-                            <span class="points">+2</span>
-                        </button>
-                        <button class="action-btn" onclick="addPoints(1)">
-                            <span>📖 독서 (10분)</span>
-                            <span class="points">+1</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="undo-btn" onclick="undoLastAction()">↩️ 마지막 행동 되돌리기</button>
-            <button class="reset-btn" onclick="resetProgress()">🔄 진행상황 초기화</button>
-        </div>
-    </div>
-    
-    <div id="notification" class="notification"></div>
-    
-    <script>
-        // Apps Script URL
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVI7G72DGmJ08XA7XggU2PZ_2G4zlZFlqAYqyVZYH22DyitjoqcSMyWYAWltGvLfcBIQ/exec';
-        
-        // AllOrigins Proxy
-        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
-        
-        // 게임 데이터
-        let gameData = {
-            예지: { points: 0, level: 1 },
-            이지: { points: 0, level: 1 }
-        };
-        
-        // 마지막 행동 기록
-        let lastAction = null;
-        let isConnected = false;
-        
-        // 캐릭터 진화 이미지들 (레벨별) - 여기서 수정하세요!
-        const characterEvolution = [
-            '🐱',      // 레벨 1
-            '😸',      // 레벨 2  
-            '😺',      // 레벨 3
-            '🙀',      // 레벨 4
-            '😻',      // 레벨 5
-            '😽',      // 레벨 6
-            '🐯',      // 레벨 7
-            '🦁',      // 레벨 8
-            '👑🐯',    // 레벨 9
-            '🔥🦁'     // 레벨 10
-        ];
-        
-        // 캐릭터 이름들 (레벨별) - 여기서 수정하세요!
-        const characterNames = [
-            '나는 에드워드 하이드',    // 레벨 1
-            '귀여운 캐릭터',  // 레벨 2
-            '웃는 캐릭터',    // 레벨 3
-            '놀간 캐릭터',    // 레벨 4
-            '사랑 캐릭터',    // 레벨 5
-            '키스 캐릭터',    // 레벨 6
-            '호랑이',        // 레벨 7
-            '사자',          // 레벨 8
-            '왕관 호랑이',    // 레벨 9
-            '불꽃 사자'      // 레벨 10
-        ];
-        
-        // URL 파라미터 방식으로 데이터 전송
-        async function sendDataAsUrlParams(data) {
-            // URL 파라미터 생성
-            const params = new URLSearchParams();
-            Object.keys(data).forEach(key => {
-                params.append(key, data[key]);
-            });
-            
-            // GET 요청으로 파라미터 전달
-            const urlWithParams = APPS_SCRIPT_URL + '?' + params.toString();
-            const proxyUrl = CORS_PROXY + encodeURIComponent(urlWithParams);
-            
-            console.log('전송 URL:', urlWithParams);
-            console.log('Proxy URL:', proxyUrl);
-            
-            const response = await fetch(proxyUrl, {
-                method: 'GET'
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-            
-            return await response.json();
-        }
-        
-        // 스프레드시트에서 최신 데이터 로드
-        async function loadDataFromSheet() {
-            try {
-                console.log('📥 스프레드시트에서 데이터 로드 시작...');
-                
-                // GET 요청으로 데이터만 가져오기 (파라미터 없이)
-                const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
-                const response = await fetch(url);
-                const result = await response.json();
-                
-                console.log('서버 응답:', result);
-                
-                // 서버에서 gameData를 반환하면 업데이트
-                if (result.success && result.gameData) {
-                    console.log('✅ 스프레드시트 데이터 로드 성공');
-                    gameData = result.gameData;
-                    updateDisplay();
-                    return result;
-                } else {
-                    console.log('⚠️ 서버에서 gameData 없음');
-                    return result;
-                }
-                
-            } catch (error) {
-                console.error('데이터 로드 실패:', error);
-                throw error;
-            }
-        }
-        
-        // 초기화
-        async function initializeApp() {
-            updateSyncStatus('🔄 URL 파라미터 방식으로 연결 테스트 중...', 'loading');
-            
-            try {
-                // 1단계: 기본 연결 테스트
-                const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
-                const response = await fetch(url);
-                const result = await response.json();
-                
-                if (result.success) {
-                    isConnected = true;
-                    updateSyncStatus('✅ 연결 성공! 스프레드시트에서 데이터 로딩 중...', 'loading');
-                    
-                    // 2단계: 스프레드시트에서 실제 데이터 로드
-                    if (result.gameData) {
-                        console.log('✅ 스프레드시트 데이터 발견:', result.gameData);
-                        gameData = result.gameData; // 기존 0,0 대신 스프레드시트 데이터 사용
-                        updateDisplay();
-                        updateSyncStatus('✅ 스프레드시트 데이터 로드 완료!', 'success');
-                        updateDebugInfo('로드 완료', `예지: ${gameData.예지.points}포인트, 이지: ${gameData.이지.points}포인트`);
-                    } else {
-                        console.log('⚠️ 스프레드시트 데이터 없음, 기본값 사용');
-                        updateDisplay();
-                        updateSyncStatus('✅ 연결 완료 (기본값 사용)', 'success');
-                        updateDebugInfo('기본값 사용', '스프레드시트에서 데이터를 가져오지 못함');
-                    }
-                } else {
-                    throw new Error(result.message || '연결 테스트 실패');
-                }
-                
-            } catch (error) {
-                console.error('초기화 오류:', error);
-                updateSyncStatus('❌ 연결 실패: ' + error.message, 'error');
-                updateDebugInfo('연결 실패', error.message);
-                isConnected = false;
-                
-                // 연결 실패해도 기본값으로 시작
-                updateDisplay();
-            }
-        }
-        
-        // 포인트 추가
-        async function addPoints(points) {
-            if (!isConnected) {
-                showNotification('연결되지 않았습니다.', 'error');
-                return;
-            }
-            
-            const currentUser = document.getElementById('user-select').value;
-            const userData = gameData[currentUser];
-            const oldLevel = userData.level;
-            const oldPoints = userData.points;
-            
-            console.log(`📊 포인트 추가 전 상태: ${currentUser} - ${oldPoints}포인트, ${oldLevel}레벨`);
-            
-            // 마지막 행동 기록
-            lastAction = {
-                user: currentUser,
-                points: points,
-                oldLevel: oldLevel,
-                oldPoints: oldPoints
-            };
-            
-            // 현재 포인트에 추가 (스프레드시트 값 기준)
-            userData.points += points;
-            console.log(`➕ ${points}포인트 추가 후: ${userData.points}포인트`);
-            
-            // 레벨업 체크
-            let levelUpCount = 0;
-            while (userData.points >= 100 && userData.level < 10) {
-                userData.level++;
-                userData.points -= 100;
-                levelUpCount++;
-                console.log(`🎉 레벨업! → 레벨 ${userData.level}, 남은 포인트: ${userData.points}`);
-            }
-            
-            // 레벨업 알림
-            if (levelUpCount > 0) {
-                showNotification(`🎉 ${currentUser}가 레벨 ${userData.level}로 성장했습니다!`);
-            }
-            
-            // 최대 레벨에서는 100으로 고정
-            if (userData.level >= 10) {
-                userData.points = Math.min(userData.points, 100);
-            }
-            
-            console.log(`📊 최종 상태: ${currentUser} - ${userData.points}포인트, ${userData.level}레벨`);
-            
-            try {
-                updateSyncStatus('📤 데이터 저장 중...', 'loading');
-                
-                // URL 파라미터 방식으로 데이터 전송
-                const result = await sendDataAsUrlParams({
-                    예지_points: gameData['예지'].points,
-                    예지_level: gameData['예지'].level,
-                    이지_points: gameData['이지'].points,
-                    이지_level: gameData['이지'].level
-                });
-                
-                console.log('서버 응답:', result);
-                
-                if (result.success && result.debugInfo && result.debugInfo.updateCount > 0) {
-                    updateDisplay();
-                    showNotification(`${currentUser}가 +${points} 포인트 획득! (총 ${userData.points}포인트)`);
-                    updateSyncStatus('✅ 데이터 저장 완료!', 'success');
-                    updateDebugInfo('저장 성공', `${result.debugInfo.updateCount}개 업데이트됨`);
-                } else {
-                    throw new Error(`업데이트 실패: ${result.debugInfo ? result.debugInfo.updateCount : 0}개 업데이트됨`);
-                }
-                
-            } catch (error) {
-                // 오류 시 롤백
-                console.log('❌ 저장 실패, 롤백 중...');
-                userData.level = oldLevel;
-                userData.points = oldPoints;
-                updateDisplay();
-                showNotification('저장 실패: ' + error.message, 'error');
-                updateSyncStatus('❌ 저장 실패', 'error');
-                updateDebugInfo('저장 실패', error.message);
-            }
-        }
-        
-        // 마지막 행동 되돌리기
-        async function undoLastAction() {
-            if (!lastAction) {
-                showNotification('되돌릴 행동이 없습니다.', 'error');
-                return;
-            }
-            
-            const userData = gameData[lastAction.user];
-            userData.level = lastAction.oldLevel;
-            userData.points = lastAction.oldPoints;
-            
-            try {
-                const result = await sendDataAsUrlParams({
-                    예지_points: gameData['예지'].points,
-                    예지_level: gameData['예지'].level,
-                    이지_points: gameData['이지'].points,
-                    이지_level: gameData['이지'].level
-                });
-                
-                if (result.success && result.debugInfo && result.debugInfo.updateCount > 0) {
-                    updateDisplay();
-                    showNotification('마지막 행동이 취소되었습니다.');
-                    lastAction = null;
-                } else {
-                    throw new Error('취소 실패');
-                }
-                
-            } catch (error) {
-                showNotification('취소 실패: ' + error.message, 'error');
-            }
-        }
-        
-        // 진행상황 초기화
-        async function resetProgress() {
-            if (!confirm('정말로 모든 진행상황을 초기화하시겠습니까?')) {
-                return;
-            }
-            
-            gameData = {
-                예지: { points: 0, level: 1 },
-                이지: { points: 0, level: 1 }
-            };
-            
-            try {
-                const result = await sendDataAsUrlParams({
-                    예지_points: 0,
-                    예지_level: 1,
-                    이지_points: 0,
-                    이지_level: 1
-                });
-                
-                if (result.success && result.debugInfo && result.debugInfo.updateCount > 0) {
-                    updateDisplay();
-                    showNotification('진행상황이 초기화되었습니다.');
-                } else {
-                    throw new Error('초기화 실패');
-                }
-                
-            } catch (error) {
-                showNotification('초기화 실패: ' + error.message, 'error');
-            }
-        }
-        
-        // 화면 업데이트
-        function updateDisplay() {
-            // 예지
-            const yejiData = gameData.예지;
-            const yejiLevel = yejiData.level;
-            const yejiPoints = yejiData.points;
-            const yejiProgress = (yejiPoints / 100) * 100;
-            
-            document.getElementById('yeji-char').textContent = characterEvolution[yejiLevel - 1];
-            document.getElementById('yeji-name').textContent = characterNames[yejiLevel - 1];
-            document.getElementById('yeji-level').textContent = `레벨 ${yejiLevel}`;
-            document.getElementById('yeji-progress').style.width = `${yejiProgress}%`;
-            document.getElementById('yeji-text').textContent = `${yejiPoints}/100`;
-            
-            // 이지
-            const iziData = gameData.이지;
-            const iziLevel = iziData.level;
-            const iziPoints = iziData.points;
-            const iziProgress = (iziPoints / 100) * 100;
-            
-            document.getElementById('izi-char').textContent = characterEvolution[iziLevel - 1];
-            document.getElementById('izi-name').textContent = characterNames[iziLevel - 1];
-            document.getElementById('izi-level').textContent = `레벨 ${iziLevel}`;
-            document.getElementById('izi-progress').style.width = `${iziProgress}%`;
-            document.getElementById('izi-text').textContent = `${iziPoints}/100`;
-        }
-        
-        // 동기화 상태 업데이트
-        function updateSyncStatus(message, type) {
-            const statusElement = document.getElementById('sync-status');
-            statusElement.textContent = message;
-            statusElement.className = `sync-status ${type}`;
-        }
-        
-        // 디버그 정보 업데이트
-        function updateDebugInfo(status, detail) {
-            const debugElement = document.getElementById('debug-info');
-            debugElement.innerHTML = `
-                연결 방식: URL 파라미터 + Proxy<br>
-                상태: ${status}<br>
-                세부사항: ${detail}
-            `;
-        }
-        
-        // 알림 표시
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification show ${type}`;
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-        
-        // 시작
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeApp);
-        } else {
-            initializeApp();
-        }
-    </script>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 자기계발 캐릭터 성장 🌟</h1>
+        </div>
+        
+        <div id="sync-status" class="sync-status">
+            🔄 URL 파라미터 방식으로 연결 중...
+        </div>
+        
+        <div class="debug-info" id="debug-info">
+            연결 방식: URL 파라미터 + Proxy<br>
+            상태: 준비 중...
+        </div>
+        
+        <div id="app-content">
+            <div class="characters">
+                <div class="character">
+                    <div class="user-label">👑 예지</div>
+                    <img class="character-img" id="yeji-image" src="" alt="예지 캐릭터">
+                    <div class="character-name" id="yeji-name"></div>
+                    <div class="character-dialogue" id="yeji-dialogue"></div>
+                    <div class="character-youtube" id="yeji-youtube"></div>
+                    <div class="character-level" id="yeji-level"></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="yeji-progress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="yeji-text"></div>
+                </div>
+                
+                <div class="character">
+                    <div class="user-label">👑 이지</div>
+                    <img class="character-img" id="izi-image" src="" alt="이지 캐릭터">
+                    <div class="character-name" id="izi-name"></div>
+                    <div class="character-dialogue" id="izi-dialogue"></div>
+                    <div class="character-youtube" id="izi-youtube"></div>
+                    <div class="character-level" id="izi-level"></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="izi-progress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="izi-text"></div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <label for="user-select" style="font-weight: bold; margin-right: 10px;">누가 활동했나요?</label>
+                    <select id="user-select" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; font-size: 14px;">
+                        <option value="예지">예지</option>
+                        <option value="이지">이지</option>
+                    </select>
+                </div>
+                
+                <div class="action-category">
+                    <div class="category-title strength">💪 근력 활동</div>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="addPoints(15)">
+                            <span>🏋️ 헬스장 운동 (1시간)</span>
+                            <span class="points">+15</span>
+                        </button>
+                        <button class="action-btn" onclick="addPoints(15)">
+                            <span>💃 연습실 댄스 (1시간)</span>
+                            <span class="points">+15</span>
+                        </button>
+                        <button class="action-btn" onclick="addPoints(15)">
+                            <span>🏊 수영 1회</span>
+                            <span class="points">+15</span>
+                        </button>
+                        <button class="action-btn" onclick="addPoints(10)">
+                            <span>🚶 걷기 (1시간)</span>
+                            <span class="points">+10</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="action-category">
+                    <div class="category-title intelligence">🧠 지력 활동</div>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="addPoints(5)">
+                            <span>📚 전공공부 (10분)</span>
+                            <span class="points">+5</span>
+                        </button>
+                        <button class="action-btn" onclick="addPoints(2)">
+                            <span>🎨 취미공부 (10분)</span>
+                            <span class="points">+2</span>
+                        </button>
+                        <button class="action-btn" onclick="addPoints(1)">
+                            <span>📖 독서 (10분)</span>
+                            <span class="points">+1</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="undo-btn" onclick="undoLastAction()">↩️ 마지막 행동 되돌리기</button>
+            <button class="reset-btn" onclick="resetProgress()">🔄 진행상황 초기화</button>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+    
+    <script>
+        // Apps Script URL
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVI7G72DGmJ08XA7XggU2PZ_2G4zlZFlqAYqyVZYH22DyitjoqcSMyWYAWltGvLfcBIQ/exec';
+        
+        // AllOrigins Proxy
+        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+        
+        // 게임 데이터
+        let gameData = {
+            예지: { points: 0, level: 1 },
+            이지: { points: 0, level: 1 }
+        };
+        
+        // 마지막 행동 기록
+        let lastAction = null;
+        let isConnected = false;
+        
+        // --- 캐릭터 데이터: 이미지 경로, 이름, 대사, 유튜브 링크 ---
+        const charactersData = [
+            { level: 1, name: '에드워드 하이드', dialogue: 'Filled with evil, but truly alive!', youtube: 'https://www.youtube.com/watch?v=7tMdbC1w2Qc', image: './images/char_level1.png' },
+            { level: 2, name: '루이지 루케니', dialogue: '상관없지, 그게 무슨 상관이람. 하품하며 종말이나 기다리지', youtube: 'https://www.youtube.com/watch?v=6lqadpofsCY', image: './images/char_level2.png' },
+            { level: 3, name: '데클란 스완', dialogue: '나한테 이야기 같은 거 없어요. 우리 같은 사람들은 그냥 사는 거예요.', youtube: 'https://www.youtube.com/watch?v=yn70v888TS0', image: './images/char_level3.png' },
+            { level: 4, name: '앙리 뒤프레', dialogue: '바꿀수없다면 나...웃으면서 보내줘', youtube: 'https://youtu.be/-gBW9moqfEw?si=QxvVQGxmVXLTA2RV', image: './images/char_level4.png' },
+            { level: 5, name: '알료샤 까라마조프', dialogue: '나약하다는 건 아직도 사랑할 수 있다는 거', youtube: 'https://www.youtube.com/watch?v=TKNzwPkd9Pk', image: './images/char_level5.png' },
+            { level: 6, name: '킹키부츠 롤라', dialogue: '무엇을 상상하든지 난 그 이상이지', youtube: 'https://www.youtube.com/watch?v=U4qxHto6cKk', image: './images/char_level6.png' },
+            { level: 7, name: '제루샤 애벗', dialogue: '행복의 비밀은 바로 현재를 살기. 이 순간 지금 살아가기', youtube: 'https://www.youtube.com/watch?v=jqsZlgaSZeo', image: './images/char_level7.png' },
+            { level: 8, name: '마틸다 웜우드', dialogue: '내 손으로 바꿔야지 나의 얘기', youtube: 'https://www.youtube.com/watch?v=WJOEfVJvqI8', image: './images/char_level8.png' },
+            { level: 9, name: '안나', dialogue: '살아온 날들과 사랑한 이들이 너무나 소중한 사람. 지금의 나보다 내일의 내가 더 중요한 사람', youtube: 'https://www.youtube.com/watch?v=mH2bq1CVNoU', image: './images/char_level9.png' },
+            { level: 10, name: '엘파바 트롭', dialogue: '너와 내가 중력을 벗어나 저 끝없는 하늘을 난다면 우릴 막을 순 없어', youtube: 'https://www.youtube.com/watch?v=6-67Q0xALtU', image: './images/char_level10.png' }
+        ];
+        // ---------------------------------------------------
+        
+        // URL 파라미터 방식으로 데이터 전송
+        async function sendDataAsUrlParams(data) {
+            // URL 파라미터 생성
+            const params = new URLSearchParams();
+            Object.keys(data).forEach(key => {
+                params.append(key, data[key]);
+            });
+            
+            // GET 요청으로 파라미터 전달
+            const urlWithParams = APPS_SCRIPT_URL + '?' + params.toString();
+            const proxyUrl = CORS_PROXY + encodeURIComponent(urlWithParams);
+            
+            console.log('전송 URL:', urlWithParams);
+            console.log('Proxy URL:', proxyUrl);
+            
+            const response = await fetch(proxyUrl, {
+                method: 'GET'
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            return await response.json();
+        }
+        
+        // 스프레드시트에서 최신 데이터 로드
+        async function loadDataFromSheet() {
+            try {
+                console.log('📥 스프레드시트에서 데이터 로드 시작...');
+                
+                // GET 요청으로 데이터만 가져오기 (파라미터 없이)
+                const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                console.log('서버 응답:', result);
+                
+                // 서버에서 gameData를 반환하면 업데이트
+                if (result.success && result.gameData) {
+                    console.log('✅ 스프레드시트 데이터 로드 성공');
+                    gameData = result.gameData; // 기존 0,0 대신 스프레드시트 데이터 사용
+                    updateDisplay();
+                    return result;
+                } else {
+                    console.log('⚠️ 서버에서 gameData 없음');
+                    return result;
+                }
+                
+            } catch (error) {
+                console.error('데이터 로드 실패:', error);
+                throw error;
+            }
+        }
+        
+        // 초기화
+        async function initializeApp() {
+            updateSyncStatus('🔄 URL 파라미터 방식으로 연결 테스트 중...', 'loading');
+            
+            try {
+                // 1단계: 기본 연결 테스트
+                const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                if (result.success) {
+                    isConnected = true;
+                    updateSyncStatus('✅ 연결 성공! 스프레드시트에서 데이터 로딩 중...', 'loading');
+                    
+                    // 2단계: 스프레드시트에서 실제 데이터 로드
+                    if (result.gameData) {
+                        console.log('✅ 스프레드시트 데이터 발견:', result.gameData);
+                        gameData = result.gameData; // 기존 0,0 대신 스프레드시트 데이터 사용
+                        updateDisplay();
+                        updateSyncStatus('✅ 스프레드시트 데이터 로드 완료!', 'success');
+                        updateDebugInfo('로드 완료', `예지: ${gameData.예지.points}포인트, 이지: ${gameData.이지.points}포인트`);
+                    } else {
+                        console.log('⚠️ 스프레드시트 데이터 없음, 기본값 사용');
+                        updateDisplay();
+                        updateSyncStatus('✅ 연결 완료 (기본값 사용)', 'success');
+                        updateDebugInfo('기본값 사용', '스프레드시트에서 데이터를 가져오지 못함');
+                    }
+                } else {
+                    throw new Error(result.message || '연결 테스트 실패');
+                }
+                
+            } catch (error) {
+                console.error('초기화 오류:', error);
+                updateSyncStatus('❌ 연결 실패: ' + error.message, 'error');
+                updateDebugInfo('연결 실패', error.message);
+                isConnected = false;
+                
+                // 연결 실패해도 기본값으로 시작
+                updateDisplay();
+            }
+        }
+        
+        // 포인트 추가
+        async function addPoints(points) {
+            if (!isConnected) {
+                showNotification('연결되지 않았습니다.', 'error');
+                return;
+            }
+            
+            const currentUser = document.getElementById('user-select').value;
+            const userData = gameData[currentUser];
+            const oldLevel = userData.level;
+            const oldPoints = userData.points;
+            
+            console.log(`📊 포인트 추가 전 상태: ${currentUser} - ${oldPoints}포인트, ${oldLevel}레벨`);
+            
+            // 마지막 행동 기록
+            lastAction = {
+                user: currentUser,
+                points: points,
+                oldLevel: oldLevel,
+                oldPoints: oldPoints
+            };
+            
+            // 현재 포인트에 추가 (스프레드시트 값 기준)
+            userData.points += points;
+            console.log(`➕ ${points}포인트 추가 후: ${userData.points}포인트`);
+            
+            // 레벨업 체크
+            let levelUpCount = 0;
+            // charactersData.length는 배열의 길이, 즉 총 캐릭터 레벨 수를 의미합니다.
+            // charactersData 배열의 인덱스는 0부터 시작하므로, 레벨 12 캐릭터는 인덱스 11에 있습니다.
+            // 따라서 최대 레벨은 charactersData.length가 됩니다.
+            while (userData.points >= 100 && userData.level < charactersData.length) { 
+                userData.level++;
+                userData.points -= 100;
+                levelUpCount++;
+                console.log(`🎉 레벨업! → 레벨 ${userData.level}, 남은 포인트: ${userData.points}`);
+            }
+            
+            // 레벨업 알림
+            if (levelUpCount > 0) {
+                showNotification(`🎉 ${currentUser}가 레벨 ${userData.level}로 성장했습니다!`);
+            }
+            
+            // 최대 레벨에서는 100으로 고정
+            if (userData.level >= charactersData.length) {
+                userData.points = Math.min(userData.points, 100);
+            }
+            
+            console.log(`📊 최종 상태: ${currentUser} - ${userData.points}포인트, ${userData.level}레벨`);
+            
+            try {
+                updateSyncStatus('📤 데이터 저장 중...', 'loading');
+                
+                // URL 파라미터 방식으로 데이터 전송
+                const result = await sendDataAsUrlParams({
+                    예지_points: gameData['예지'].points,
+                    예지_level: gameData['예지'].level,
+                    이지_points: gameData['이지'].points,
+                    이지_level: gameData['이지'].level
+                });
+                
+                console.log('서버 응답:', result);
+                
+                if (result.success && result.debugInfo && result.debugInfo.updateCount > 0) {
+                    updateDisplay();
+                    showNotification(`${currentUser}가 +${points} 포인트 획득! (총 ${userData.points}포인트)`);
+                    updateSyncStatus('✅ 데이터 저장 완료!', 'success');
+                    updateDebugInfo('저장 성공', `${result.debugInfo.updateCount}개 업데이트됨`);
+                } else {
+                    throw new Error(`업데이트 실패: ${result.debugInfo ? result.debugInfo.updateCount : 0}개 업데이트됨`);
+                }
+                
+            } catch (error) {
+                // 오류 시 롤백
+                console.log('❌ 저장 실패, 롤백 중...');
+                userData.level = oldLevel;
+                userData.points = oldPoints;
+                updateDisplay();
+                showNotification('저장 실패: ' + error.message, 'error');
+                updateSyncStatus('❌ 저장 실패', 'error');
+                updateDebugInfo('저장 실패', error.message);
+            }
+        }
+        
+        // 마지막 행동 되돌리기
+        async function undoLastAction() {
+            if (!lastAction) {
+                showNotification('되돌릴 행동이 없습니다.', 'error');
+                return;
+            }
+            
+            const userData = gameData[lastAction.user];
+            userData.level = lastAction.oldLevel;
+            userData.points = lastAction.oldPoints;
+            
+            try {
+                const result = await sendDataAsUrlParams({
+                    예지_points: gameData['예지'].points,
+                    예지_level: gameData['예지'].level,
+                    이지_points: gameData['이지'].points,
+                    이지_level: gameData['이지'].level
+                });
+                
+                if (result.success && result.debugInfo && result.debugInfo.updateCount > 0) {
+                    updateDisplay();
+                    showNotification('마지막 행동이 취소되었습니다.');
+                    lastAction = null;
+                } else {
+                    throw new Error('취소 실패');
+                }
+                
+            } catch (error) {
+                showNotification('취소 실패: ' + error.message, 'error');
+            }
+        }
+        
+        // 진행상황 초기화
+        async function resetProgress() {
+            if (!confirm('정말로 모든 진행상황을 초기화하시겠습니까?')) {
+                return;
+            }
+            
+            gameData = {
+                예지: { points: 0, level: 1 },
+                이지: { points: 0, level: 1 }
+            };
+            
+            try {
+                const result = await sendDataAsUrlParams({
+                    예지_points: 0,
+                    예지_level: 1,
+                    이지_points: 0,
+                    이지_level: 1
+                });
+                
+                if (result.success && result.debugInfo && result.debugInfo.updateCount > 0) {
+                    updateDisplay();
+                    showNotification('진행상황이 초기화되었습니다.');
+                } else {
+                    throw new Error('초기화 실패');
+                }
+                
+            } catch (error) {
+                showNotification('초기화 실패: ' + error.message, 'error');
+            }
+        }
+        
+        // 화면 업데이트
+        function updateDisplay() {
+            // 예지
+            const yejiData = gameData.예지;
+            const yejiLevel = yejiData.level;
+            const yejiPoints = yejiData.points;
+            const yejiProgress = (yejiPoints / 100) * 100;
+            // 배열의 길이를 초과하지 않도록 보정 (최대 레벨까지만 표시)
+            const yejiCharInfo = charactersData[Math.min(yejiLevel - 1, charactersData.length - 1)];
+            
+            document.getElementById('yeji-image').src = yejiCharInfo.image;
+            document.getElementById('yeji-name').textContent = yejiCharInfo.name;
+            document.getElementById('yeji-dialogue').textContent = yejiCharInfo.dialogue;
+
+            const yejiYoutubeElement = document.getElementById('yeji-youtube');
+            if (yejiCharInfo.youtube) {
+                yejiYoutubeElement.innerHTML = `<a href="${yejiCharInfo.youtube}" target="_blank">🎶 음악 듣기</a>`;
+            } else {
+                yejiYoutubeElement.innerHTML = ''; // 링크가 없으면 비워둠
+            }
+            
+            document.getElementById('yeji-level').textContent = `레벨 ${yejiLevel}`;
+            document.getElementById('yeji-progress').style.width = `${yejiProgress}%`;
+            document.getElementById('yeji-text').textContent = `${yejiPoints}/100`;
+            
+            // 이지
+            const iziData = gameData.이지;
+            const iziLevel = iziData.level;
+            const iziPoints = iziData.points;
+            const iziProgress = (iziPoints / 100) * 100;
+            // 배열의 길이를 초과하지 않도록 보정 (최대 레벨까지만 표시)
+            const iziCharInfo = charactersData[Math.min(iziLevel - 1, charactersData.length - 1)];
+            
+            document.getElementById('izi-image').src = iziCharInfo.image;
+            document.getElementById('izi-name').textContent = iziCharInfo.name;
+            document.getElementById('izi-dialogue').textContent = iziCharInfo.dialogue;
+
+            const iziYoutubeElement = document.getElementById('izi-youtube');
+            if (iziCharInfo.youtube) {
+                iziYoutubeElement.innerHTML = `<a href="${iziCharInfo.youtube}" target="_blank">🎶 음악 듣기</a>`;
+            } else {
+                iziYoutubeElement.innerHTML = ''; // 링크가 없으면 비워둠
+            }
+
+            document.getElementById('izi-level').textContent = `레벨 ${iziLevel}`;
+            document.getElementById('izi-progress').style.width = `${iziProgress}%`;
+            document.getElementById('izi-text').textContent = `${iziPoints}/100`;
+        }
+        
+        // 동기화 상태 업데이트
+        function updateSyncStatus(message, type) {
+            const statusElement = document.getElementById('sync-status');
+            statusElement.textContent = message;
+            statusElement.className = `sync-status ${type}`;
+        }
+        
+        // 디버그 정보 업데이트
+        function updateDebugInfo(status, detail) {
+            const debugElement = document.getElementById('debug-info');
+            debugElement.innerHTML = `
+                연결 방식: URL 파라미터 + Proxy<br>
+                상태: ${status}<br>
+                세부사항: ${detail}
+            `;
+        }
+        
+        // 알림 표시
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification show ${type}`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 시작
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
 </body>
 </html>
