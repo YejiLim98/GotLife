@@ -318,6 +318,7 @@
             
             <button class="undo-btn" onclick="undoLastAction()">↩️ 마지막 행동 되돌리기</button>
             <button class="reset-btn" onclick="resetProgress()">🔄 진행상황 초기화</button>
+            <button class="undo-btn" onclick="refreshFromSheet()" style="background: #17a2b8;">🔄 스프레드시트에서 새로고침</button>
         </div>
     </div>
     
@@ -359,7 +360,7 @@
                 params.append(key, data[key]);
             });
             
-            // GET 요청으로 파라미터 전달 (POST로 해도 URL 파라미터는 동일하게 처리됨)
+            // GET 요청으로 파라미터 전달
             const urlWithParams = APPS_SCRIPT_URL + '?' + params.toString();
             const proxyUrl = CORS_PROXY + encodeURIComponent(urlWithParams);
             
@@ -367,7 +368,7 @@
             console.log('Proxy URL:', proxyUrl);
             
             const response = await fetch(proxyUrl, {
-                method: 'GET'  // URL 파라미터는 GET으로도 전달 가능
+                method: 'GET'
             });
             
             if (!response.ok) {
@@ -375,6 +376,58 @@
             }
             
             return await response.json();
+        }
+        
+        // 스프레드시트에서 최신 데이터 로드
+        async function loadDataFromSheet() {
+            try {
+                console.log('📥 스프레드시트에서 데이터 로드 시작...');
+                
+                // GET 요청으로 데이터만 가져오기 (파라미터 없이)
+                const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                console.log('서버 응답:', result);
+                
+                // 서버에서 gameData를 반환하면 업데이트
+                if (result.success && result.gameData) {
+                    console.log('✅ 스프레드시트 데이터 로드 성공');
+                    gameData = result.gameData;
+                    updateDisplay();
+                    return result;
+                } else {
+                    console.log('⚠️ 서버에서 gameData 없음');
+                    return result;
+                }
+                
+            } catch (error) {
+                console.error('데이터 로드 실패:', error);
+                throw error;
+            }
+        }
+        
+        // 강제로 스프레드시트 데이터 새로고침
+        async function refreshFromSheet() {
+            try {
+                updateSyncStatus('🔄 스프레드시트에서 데이터 새로고침 중...', 'loading');
+                
+                const result = await loadDataFromSheet();
+                
+                if (result.success && result.gameData) {
+                    showNotification('✅ 스프레드시트에서 데이터를 새로 불러왔습니다!');
+                    updateSyncStatus('✅ 새로고침 완료!', 'success');
+                    updateDebugInfo('새로고침 성공', '최신 데이터로 업데이트됨');
+                } else {
+                    showNotification('⚠️ 데이터 로드는 되었지만 게임 데이터가 없습니다.', 'error');
+                    updateSyncStatus('⚠️ 부분 성공', 'loading');
+                }
+                
+            } catch (error) {
+                updateSyncStatus('❌ 새로고침 실패', 'error');
+                showNotification('새로고침 실패: ' + error.message, 'error');
+                updateDebugInfo('새로고침 실패', error.message);
+            }
         }
         
         // 초기화
