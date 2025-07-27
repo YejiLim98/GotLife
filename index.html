@@ -435,16 +435,28 @@
             updateSyncStatus('🔄 URL 파라미터 방식으로 연결 테스트 중...', 'loading');
             
             try {
-                // GET 요청으로 연결 테스트
+                // 1단계: 기본 연결 테스트
                 const url = CORS_PROXY + encodeURIComponent(APPS_SCRIPT_URL);
                 const response = await fetch(url);
                 const result = await response.json();
                 
                 if (result.success) {
                     isConnected = true;
-                    updateSyncStatus('✅ URL 파라미터 방식 연결 성공!', 'success');
-                    updateDebugInfo('연결 성공', '연결됨');
-                    updateDisplay();
+                    updateSyncStatus('✅ 연결 성공! 스프레드시트에서 데이터 로딩 중...', 'loading');
+                    
+                    // 2단계: 스프레드시트에서 실제 데이터 로드
+                    if (result.gameData) {
+                        console.log('✅ 스프레드시트 데이터 발견:', result.gameData);
+                        gameData = result.gameData; // 기존 0,0 대신 스프레드시트 데이터 사용
+                        updateDisplay();
+                        updateSyncStatus('✅ 스프레드시트 데이터 로드 완료!', 'success');
+                        updateDebugInfo('로드 완료', `예지: ${gameData.예지.points}포인트, 이지: ${gameData.이지.points}포인트`);
+                    } else {
+                        console.log('⚠️ 스프레드시트 데이터 없음, 기본값 사용');
+                        updateDisplay();
+                        updateSyncStatus('✅ 연결 완료 (기본값 사용)', 'success');
+                        updateDebugInfo('기본값 사용', '스프레드시트에서 데이터를 가져오지 못함');
+                    }
                 } else {
                     throw new Error(result.message || '연결 테스트 실패');
                 }
@@ -454,6 +466,9 @@
                 updateSyncStatus('❌ 연결 실패: ' + error.message, 'error');
                 updateDebugInfo('연결 실패', error.message);
                 isConnected = false;
+                
+                // 연결 실패해도 기본값으로 시작
+                updateDisplay();
             }
         }
         
@@ -469,6 +484,8 @@
             const oldLevel = userData.level;
             const oldPoints = userData.points;
             
+            console.log(`📊 포인트 추가 전 상태: ${currentUser} - ${oldPoints}포인트, ${oldLevel}레벨`);
+            
             // 마지막 행동 기록
             lastAction = {
                 user: currentUser,
@@ -477,12 +494,21 @@
                 oldPoints: oldPoints
             };
             
+            // 현재 포인트에 추가 (스프레드시트 값 기준)
             userData.points += points;
+            console.log(`➕ ${points}포인트 추가 후: ${userData.points}포인트`);
             
             // 레벨업 체크
+            let levelUpCount = 0;
             while (userData.points >= 100 && userData.level < 10) {
                 userData.level++;
                 userData.points -= 100;
+                levelUpCount++;
+                console.log(`🎉 레벨업! → 레벨 ${userData.level}, 남은 포인트: ${userData.points}`);
+            }
+            
+            // 레벨업 알림
+            if (levelUpCount > 0) {
                 showNotification(`🎉 ${currentUser}가 레벨 ${userData.level}로 성장했습니다!`);
             }
             
@@ -490,6 +516,8 @@
             if (userData.level >= 10) {
                 userData.points = Math.min(userData.points, 100);
             }
+            
+            console.log(`📊 최종 상태: ${currentUser} - ${userData.points}포인트, ${userData.level}레벨`);
             
             try {
                 updateSyncStatus('📤 데이터 저장 중...', 'loading');
@@ -506,7 +534,7 @@
                 
                 if (result.success && result.debugInfo && result.debugInfo.updateCount > 0) {
                     updateDisplay();
-                    showNotification(`${currentUser}가 +${points} 포인트 획득!`);
+                    showNotification(`${currentUser}가 +${points} 포인트 획득! (총 ${userData.points}포인트)`);
                     updateSyncStatus('✅ 데이터 저장 완료!', 'success');
                     updateDebugInfo('저장 성공', `${result.debugInfo.updateCount}개 업데이트됨`);
                 } else {
@@ -515,6 +543,7 @@
                 
             } catch (error) {
                 // 오류 시 롤백
+                console.log('❌ 저장 실패, 롤백 중...');
                 userData.level = oldLevel;
                 userData.points = oldPoints;
                 updateDisplay();
