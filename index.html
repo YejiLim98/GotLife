@@ -318,7 +318,6 @@
             
             <button class="undo-btn" onclick="undoLastAction()">↩️ 마지막 행동 되돌리기</button>
             <button class="reset-btn" onclick="resetProgress()">🔄 진행상황 초기화</button>
-            <button class="undo-btn" onclick="refreshFromSheet()" style="background: #17a2b8;">🔄 스프레드시트에서 새로고침</button>
         </div>
     </div>
     
@@ -341,15 +340,32 @@
         let lastAction = null;
         let isConnected = false;
         
-        // 캐릭터 진화 이미지들
+        // 캐릭터 진화 이미지들 (레벨별) - 여기서 수정하세요!
         const characterEvolution = [
-            '🐱', '😸', '😺', '🙀', '😻', '😽', '🐯', '🦁', '👑🐯', '🔥🦁'
+            '🐱',      // 레벨 1
+            '😸',      // 레벨 2  
+            '😺',      // 레벨 3
+            '🙀',      // 레벨 4
+            '😻',      // 레벨 5
+            '😽',      // 레벨 6
+            '🐯',      // 레벨 7
+            '🦁',      // 레벨 8
+            '👑🐯',    // 레벨 9
+            '🔥🦁'     // 레벨 10
         ];
         
-        // 캐릭터 이름들
+        // 캐릭터 이름들 (레벨별) - 여기서 수정하세요!
         const characterNames = [
-            '쭈글 캐릭터', '귀여운 캐릭터', '웃는 캐릭터', '놀간 캐릭터', '사랑 캐릭터',
-            '키스 캐릭터', '호랑이', '사자', '왕관 호랑이', '불꽃 사자'
+            '나는 에드워드 하이드',    // 레벨 1
+            '귀여운 캐릭터',  // 레벨 2
+            '웃는 캐릭터',    // 레벨 3
+            '놀간 캐릭터',    // 레벨 4
+            '사랑 캐릭터',    // 레벨 5
+            '키스 캐릭터',    // 레벨 6
+            '호랑이',        // 레벨 7
+            '사자',          // 레벨 8
+            '왕관 호랑이',    // 레벨 9
+            '불꽃 사자'      // 레벨 10
         ];
         
         // URL 파라미터 방식으로 데이터 전송
@@ -404,29 +420,6 @@
             } catch (error) {
                 console.error('데이터 로드 실패:', error);
                 throw error;
-            }
-        }
-        
-        // 강제로 스프레드시트 데이터 새로고침
-        async function refreshFromSheet() {
-            try {
-                updateSyncStatus('🔄 스프레드시트에서 데이터 새로고침 중...', 'loading');
-                
-                const result = await loadDataFromSheet();
-                
-                if (result.success && result.gameData) {
-                    showNotification('✅ 스프레드시트에서 데이터를 새로 불러왔습니다!');
-                    updateSyncStatus('✅ 새로고침 완료!', 'success');
-                    updateDebugInfo('새로고침 성공', '최신 데이터로 업데이트됨');
-                } else {
-                    showNotification('⚠️ 데이터 로드는 되었지만 게임 데이터가 없습니다.', 'error');
-                    updateSyncStatus('⚠️ 부분 성공', 'loading');
-                }
-                
-            } catch (error) {
-                updateSyncStatus('❌ 새로고침 실패', 'error');
-                showNotification('새로고침 실패: ' + error.message, 'error');
-                updateDebugInfo('새로고침 실패', error.message);
             }
         }
         
