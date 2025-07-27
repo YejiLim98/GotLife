@@ -74,15 +74,6 @@
             font-size: 16px;
         }
         
-        .config-input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        
         .config-btn {
             background: #4CAF50;
             color: white;
@@ -104,35 +95,6 @@
         
         .config-btn.secondary:hover {
             background: #1976D2;
-        }
-        
-        .user-tabs {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        
-        .tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            background: #f0f0f0;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        
-        .tab.active {
-            background: #667eea;
-            color: white;
-        }
-        
-        .tab:first-child {
-            border-radius: 10px 0 0 10px;
-        }
-        
-        .tab:last-child {
-            border-radius: 0 10px 10px 0;
         }
         
         .characters {
@@ -256,27 +218,12 @@
             transform: translateY(0);
         }
         
-        .action-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
         .points {
             background: #4CAF50;
             color: white;
             padding: 4px 8px;
             border-radius: 15px;
             font-size: 12px;
-        }
-        
-        .level-display {
-            background: #333;
-            color: white;
-            padding: 10px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 20px;
         }
         
         .notification {
@@ -330,8 +277,11 @@
             display: none;
         }
         
-        .loading {
-            display: none !important;
+        .user-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -357,54 +307,55 @@
         </div>
         
         <div id="app-content">
-            <div class="user-tabs">
-                <button class="tab active" onclick="switchUser('예지')">예지</button>
-                <button class="tab" onclick="switchUser('이지')">이지</button>
-            </div>
-            
-            <div id="current-user" class="level-display">
-                <div style="font-size: 18px; margin-bottom: 5px;">👑 예지의 캐릭터들</div>
-            </div>
-            
             <div class="characters">
                 <div class="character">
-                    <div class="character-icon" id="strength-char">🐱</div>
-                    <div class="character-name" id="strength-name">쭈글 고양이</div>
-                    <div class="character-level" id="strength-level">레벨 1</div>
+                    <div class="user-label">👑 예지</div>
+                    <div class="character-icon emoji" id="yeji-char">🐱</div>
+                    <div class="character-name" id="yeji-name">쭈글 캐릭터</div>
+                    <div class="character-level" id="yeji-level">레벨 1</div>
                     <div class="progress-bar">
-                        <div class="progress-fill" id="strength-progress" style="width: 0%"></div>
+                        <div class="progress-fill" id="yeji-progress" style="width: 0%"></div>
                     </div>
-                    <div class="progress-text" id="strength-text">0/50</div>
+                    <div class="progress-text" id="yeji-text">0/100</div>
                 </div>
                 
                 <div class="character">
-                    <div class="character-icon" id="intelligence-char">🐻</div>
-                    <div class="character-name" id="intelligence-name">졸린 곰</div>
-                    <div class="character-level" id="intelligence-level">레벨 1</div>
+                    <div class="user-label">👑 이지</div>
+                    <div class="character-icon emoji" id="izi-char">🐱</div>
+                    <div class="character-name" id="izi-name">쭈글 캐릭터</div>
+                    <div class="character-level" id="izi-level">레벨 1</div>
                     <div class="progress-bar">
-                        <div class="progress-fill" id="intelligence-progress" style="width: 0%"></div>
+                        <div class="progress-fill" id="izi-progress" style="width: 0%"></div>
                     </div>
-                    <div class="progress-text" id="intelligence-text">0/50</div>
+                    <div class="progress-text" id="izi-text">0/100</div>
                 </div>
             </div>
             
             <div class="actions">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <label for="user-select" style="font-weight: bold; margin-right: 10px;">누가 활동했나요?</label>
+                    <select id="user-select" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; font-size: 14px;">
+                        <option value="예지">예지</option>
+                        <option value="이지">이지</option>
+                    </select>
+                </div>
+                
                 <div class="action-category">
                     <div class="category-title strength">💪 근력 활동</div>
                     <div class="action-buttons">
-                        <button class="action-btn" onclick="addPoints('strength', 15)">
+                        <button class="action-btn" onclick="addPoints(15)">
                             <span>🏋️ 헬스장 운동 (1시간)</span>
                             <span class="points">+15</span>
                         </button>
-                        <button class="action-btn" onclick="addPoints('strength', 15)">
+                        <button class="action-btn" onclick="addPoints(15)">
                             <span>💃 연습실 댄스 (1시간)</span>
                             <span class="points">+15</span>
                         </button>
-                        <button class="action-btn" onclick="addPoints('strength', 15)">
+                        <button class="action-btn" onclick="addPoints(15)">
                             <span>🏊 수영 1회</span>
                             <span class="points">+15</span>
                         </button>
-                        <button class="action-btn" onclick="addPoints('strength', 10)">
+                        <button class="action-btn" onclick="addPoints(10)">
                             <span>🚶 걷기 (1시간)</span>
                             <span class="points">+10</span>
                         </button>
@@ -414,15 +365,15 @@
                 <div class="action-category">
                     <div class="category-title intelligence">🧠 지력 활동</div>
                     <div class="action-buttons">
-                        <button class="action-btn" onclick="addPoints('intelligence', 5)">
+                        <button class="action-btn" onclick="addPoints(5)">
                             <span>📚 전공공부 (10분)</span>
                             <span class="points">+5</span>
                         </button>
-                        <button class="action-btn" onclick="addPoints('intelligence', 2)">
+                        <button class="action-btn" onclick="addPoints(2)">
                             <span>🎨 취미공부 (10분)</span>
                             <span class="points">+2</span>
                         </button>
-                        <button class="action-btn" onclick="addPoints('intelligence', 1)">
+                        <button class="action-btn" onclick="addPoints(1)">
                             <span>📖 독서 (10분)</span>
                             <span class="points">+1</span>
                         </button>
@@ -442,88 +393,47 @@
         const FIXED_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1wQZD2MxqovNA4zz2lKpPb57YJXmzON0Zv_P2SRJYW-Y/edit?usp=sharing';
         const FIXED_SHEET_ID = '1wQZD2MxqovNA4zz2lKpPb57YJXmzON0Zv_P2SRJYW-Y';
         
-        // Google Apps Script 웹앱 URL (고정)
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKDpXdxKP3UeC-o_GRA-hNgIUODIf7j2PAtFD4JD3-NgJP82PhyDlSgjWT7CCIZLF64Q/exec';
+        // Google Apps Script 웹앱 URL (새로 배포된 URL)
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVI7G72DGmJ08XA7XggU2PZ_2G4zlZFlqAYqyVZYH22DyitjoqcSMyWYAWltGvLfcBIQ/exec';
         
-        // 게임 데이터
+        // 게임 데이터 (통합 시스템)
         let gameData = {
-            예지: {
-                strength: { points: 0, level: 1 },
-                intelligence: { points: 0, level: 1 }
-            },
-            이지: {
-                strength: { points: 0, level: 1 },
-                intelligence: { points: 0, level: 1 }
-            }
+            예지: { points: 0, level: 1 },
+            이지: { points: 0, level: 1 }
         };
         
         // 마지막 행동 기록
         let lastAction = null;
-        let currentUser = '예지';
         let isConnected = false;
         
-        // 캐릭터 진화 이미지들 (이미지 URL 또는 이모지)
-        const characterEvolution = {
-            strength: [
-                'https://example.com/cat1.jpg',  // 레벨 1: 쭈글 고양이
-                'https://example.com/cat2.jpg',  // 레벨 2: 귀여운 고양이
-                '😺',  // 레벨 3: 웃는 고양이 (이모지도 가능)
-                '🙀',  // 레벨 4: 놀란 고양이
-                '😻',  // 레벨 5: 사랑 고양이
-                '😽',  // 레벨 6: 키스 고양이
-                '🐯',  // 레벨 7: 호랑이
-                '🦁',  // 레벨 8: 사자
-                '👑🐯', // 레벨 9: 왕관 호랑이
-                '🔥🦁'  // 레벨 10: 불꽃 사자
-            ],
-            intelligence: [
-                'https://example.com/bear1.jpg', // 레벨 1: 졸린 곰
-                'https://example.com/bear2.jpg', // 레벨 2: 판다곰
-                '🧸',  // 레벨 3: 테디베어
-                '🤓🐻', // 레벨 4: 공부곰
-                '📚🐼', // 레벨 5: 책읽는 판다
-                '🎓🧸', // 레벨 6: 졸업곰
-                '🧠🐻', // 레벨 7: 천재곰
-                '👨‍🎓🐼', // 레벨 8: 박사 판다
-                '🏆🧸', // 레벨 9: 우승곰
-                '🌟🧠'  // 레벨 10: 별빛 천재
-            ]
-        };
+        // 캐릭터 진화 이미지들 (레벨별)
+        const characterEvolution = [
+            '🐱',      // 레벨 1: 쭈글 고양이
+            '😸',      // 레벨 2: 웃는 고양이
+            '😺',      // 레벨 3: 행복한 고양이
+            '🙀',      // 레벨 4: 놀란 고양이
+            '😻',      // 레벨 5: 사랑하는 고양이
+            '😽',      // 레벨 6: 키스하는 고양이
+            '🐯',      // 레벨 7: 호랑이
+            '🦁',      // 레벨 8: 사자
+            '👑🐯',    // 레벨 9: 왕관 호랑이
+            '🔥🦁'     // 레벨 10: 불꽃 사자
+        ];
         
-        // 캐릭터 이름들
-        const characterNames = {
-            strength: ['쭈글 고양이', '귀여운 고양이', '웃는 고양이', '놀란 고양이', '사랑 고양이', 
-                      '키스 고양이', '호랑이', '사자', '왕관 호랑이', '불꽃 사자'],
-            intelligence: ['졸린 곰', '판다곰', '테디베어', '공부곰', '책읽는 판다', 
-                          '졸업곰', '천재곰', '박사 판다', '우승곰', '별빛 천재']
-        };
+        // 캐릭터 이름들 (레벨별)
+        const characterNames = [
+            '쭈글 캐릭터',      // 레벨 1
+            '귀여운 캐릭터',    // 레벨 2
+            '웃는 캐릭터',      // 레벨 3
+            '놀란 캐릭터',      // 레벨 4
+            '사랑 캐릭터',      // 레벨 5
+            '키스 캐릭터',      // 레벨 6
+            '호랑이',          // 레벨 7
+            '사자',            // 레벨 8
+            '왕관 호랑이',      // 레벨 9
+            '불꽃 사자'        // 레벨 10
+        ];
         
-        // Apps Script URL 설정
-        function setAppsScriptUrl() {
-            const url = document.getElementById('apps-script-url').value.trim();
-            if (!url) {
-                showNotification('Apps Script URL을 입력해주세요.', 'error');
-                return;
-            }
-            
-            // URL을 코드에 직접 설정 (실제로는 localStorage 사용)
-            localStorage.setItem('appsScriptUrl', url);
-            showNotification('Apps Script URL이 설정되었습니다!');
-            
-            // 실제 사용을 위해 전역 변수 업데이트
-            window.APPS_SCRIPT_URL = url;
-        }
-        
-        // 저장된 Apps Script URL 로드
-        function loadAppsScriptUrl() {
-            const savedUrl = localStorage.getItem('appsScriptUrl');
-            if (savedUrl) {
-                document.getElementById('apps-script-url').value = savedUrl;
-                window.APPS_SCRIPT_URL = savedUrl;
-                return true;
-            }
-            return false;
-        }
         // 자동 초기화 및 연결
         async function initializeApp() {
             updateSyncStatus('🔄 구글 시트에서 데이터 로딩 중...', 'loading');
@@ -574,22 +484,101 @@
             configSection.classList.toggle('hidden');
         }
         
-        // 로컬 스토리지에서 설정 로드 (삭제)
-        function loadSettings() {
-            // 고정 시트를 사용하므로 불필요
+        // 포인트 추가 (통합 시스템)
+        async function addPoints(points) {
+            const currentUser = document.getElementById('user-select').value;
+            const userData = gameData[currentUser];
+            const oldLevel = userData.level;
+            const oldPoints = userData.points;
+            
+            // 마지막 행동 기록
+            lastAction = {
+                user: currentUser,
+                points: points,
+                oldLevel: oldLevel,
+                oldPoints: oldPoints
+            };
+            
+            userData.points += points;
+            
+            // 레벨업 체크 (100점마다)
+            while (userData.points >= 100 && userData.level < 10) {
+                userData.level++;
+                userData.points -= 100;
+                showNotification(`🎉 ${currentUser}가 레벨 ${userData.level}로 성장했습니다!`);
+            }
+            
+            // 최대 레벨에서는 100으로 고정
+            if (userData.level >= 10) {
+                userData.points = Math.min(userData.points, 100);
+            }
+            
+            await saveDataToSheet();
+            updateDisplay();
+            showNotification(`${currentUser}가 +${points} 포인트 획득!`);
         }
         
-        // 구글 시트 URL에서 ID 추출 (삭제됨 - 고정 ID 사용)
-        function extractSheetId(url) {
-            // 사용하지 않음
+        // 마지막 행동 되돌리기
+        async function undoLastAction() {
+            if (!lastAction) {
+                showNotification('되돌릴 행동이 없습니다.', 'error');
+                return;
+            }
+            
+            const userData = gameData[lastAction.user];
+            userData.level = lastAction.oldLevel;
+            userData.points = lastAction.oldPoints;
+            
+            await saveDataToSheet();
+            updateDisplay();
+            showNotification('마지막 행동이 취소되었습니다.');
+            lastAction = null;
         }
         
-        // 구글 시트 연결 (자동화됨)
-        async function connectGoogleSheet() {
-            // 자동으로 연결되므로 불필요
+        // 캐릭터 아이콘 업데이트 함수
+        function updateCharacterIcon(elementId, imageUrlOrEmoji) {
+            const element = document.getElementById(elementId);
+            
+            // URL인지 확인 (http로 시작하거나 .jpg, .png 등 포함)
+            if (imageUrlOrEmoji.startsWith('http') || imageUrlOrEmoji.includes('.jpg') || imageUrlOrEmoji.includes('.png') || imageUrlOrEmoji.includes('.gif')) {
+                // 이미지인 경우
+                element.innerHTML = `<img src="${imageUrlOrEmoji}" alt="캐릭터" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                element.className = 'character-icon';
+            } else {
+                // 이모지인 경우
+                element.textContent = imageUrlOrEmoji;
+                element.className = 'character-icon emoji';
+            }
         }
         
-        // 구글 시트에서 데이터 로드 (디버깅 버전)
+        // 화면 업데이트 (통합 시스템)
+        function updateDisplay() {
+            // 예지 캐릭터 업데이트
+            const yejiData = gameData['예지'];
+            const yejiLevel = yejiData.level;
+            const yejiPoints = yejiData.points;
+            const yejiProgress = (yejiPoints / 100) * 100;
+            
+            updateCharacterIcon('yeji-char', characterEvolution[yejiLevel - 1]);
+            document.getElementById('yeji-name').textContent = characterNames[yejiLevel - 1];
+            document.getElementById('yeji-level').textContent = `레벨 ${yejiLevel}`;
+            document.getElementById('yeji-progress').style.width = `${yejiProgress}%`;
+            document.getElementById('yeji-text').textContent = `${yejiPoints}/100`;
+            
+            // 이지 캐릭터 업데이트
+            const iziData = gameData['이지'];
+            const iziLevel = iziData.level;
+            const iziPoints = iziData.points;
+            const iziProgress = (iziPoints / 100) * 100;
+            
+            updateCharacterIcon('izi-char', characterEvolution[iziLevel - 1]);
+            document.getElementById('izi-name').textContent = characterNames[iziLevel - 1];
+            document.getElementById('izi-level').textContent = `레벨 ${iziLevel}`;
+            document.getElementById('izi-progress').style.width = `${iziProgress}%`;
+            document.getElementById('izi-text').textContent = `${iziPoints}/100`;
+        }
+        
+        // 구글 시트에서 데이터 로드 (통합 시스템)
         async function loadDataFromSheet() {
             console.log('데이터 로드 시작...');
             const csvUrl = `https://docs.google.com/spreadsheets/d/${FIXED_SHEET_ID}/export?format=csv`;
@@ -607,7 +596,6 @@
                 console.log('CSV 데이터:', csvText);
                 
                 const rows = csvText.trim().split('\n').map(row => {
-                    // 간단한 CSV 파싱
                     return row.split(',').map(cell => cell.trim().replace(/"/g, ''));
                 });
                 
@@ -619,19 +607,19 @@
                     console.log('헤더 제거 후:', rows);
                 }
                 
-                // 데이터 파싱
+                // 데이터 파싱 (통합 시스템용)
                 rows.forEach((row, index) => {
                     console.log(`행 ${index}:`, row);
-                    if (row.length >= 4) {
-                        const [user, type, points, level] = row;
-                        console.log(`처리 중: ${user}, ${type}, ${points}, ${level}`);
+                    if (row.length >= 3) {
+                        const [user, points, level] = row;
+                        console.log(`처리 중: ${user}, ${points}, ${level}`);
                         
-                        if (gameData[user] && gameData[user][type]) {
-                            gameData[user][type].points = parseInt(points) || 0;
-                            gameData[user][type].level = parseInt(level) || 1;
-                            console.log(`업데이트 완료: ${user} ${type}`);
+                        if (gameData[user]) {
+                            gameData[user].points = parseInt(points) || 0;
+                            gameData[user].level = parseInt(level) || 1;
+                            console.log(`업데이트 완료: ${user}`);
                         } else {
-                            console.log(`데이터 구조 불일치: ${user}, ${type}`);
+                            console.log(`데이터 구조 불일치: ${user}`);
                         }
                     }
                 });
@@ -644,7 +632,7 @@
             }
         }
         
-        // 구글 시트에 데이터 저장 (Apps Script 사용)
+        // 구글 시트에 데이터 저장 (통합 시스템)
         async function saveDataToSheet() {
             if (!isConnected) {
                 console.log('시트에 연결되지 않았습니다.');
@@ -658,14 +646,10 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        예지_strength_points: gameData['예지'].strength.points,
-                        예지_strength_level: gameData['예지'].strength.level,
-                        예지_intelligence_points: gameData['예지'].intelligence.points,
-                        예지_intelligence_level: gameData['예지'].intelligence.level,
-                        이지_strength_points: gameData['이지'].strength.points,
-                        이지_strength_level: gameData['이지'].strength.level,
-                        이지_intelligence_points: gameData['이지'].intelligence.points,
-                        이지_intelligence_level: gameData['이지'].intelligence.level
+                        예지_points: gameData['예지'].points,
+                        예지_level: gameData['예지'].level,
+                        이지_points: gameData['이지'].points,
+                        이지_level: gameData['이지'].level
                     })
                 });
                 
@@ -687,136 +671,6 @@
             statusElement.className = `sync-status ${type}`;
         }
         
-        // 설정 가이드 표시/숨기기
-        function showSetupGuide() {
-            document.getElementById('setup-guide').classList.remove('hidden');
-        }
-        
-        function hideSetupGuide() {
-            document.getElementById('setup-guide').classList.add('hidden');
-        }
-        
-        // 사용자 전환
-        function switchUser(user) {
-            currentUser = user;
-            
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.textContent === user) {
-                    tab.classList.add('active');
-                }
-            });
-            
-            document.getElementById('current-user').innerHTML = 
-                `<div style="font-size: 18px; margin-bottom: 5px;">👑 ${user}의 캐릭터들</div>`;
-            
-            updateDisplay();
-        }
-        
-        // 포인트 추가
-        async function addPoints(type, points) {
-            if (!isConnected) {
-                showNotification('구글 시트에 먼저 연결해주세요.', 'error');
-                return;
-            }
-            
-            const userData = gameData[currentUser];
-            const oldLevel = userData[type].level;
-            const oldPoints = userData[type].points;
-            
-            // 마지막 행동 기록
-            lastAction = {
-                user: currentUser,
-                type: type,
-                points: points,
-                oldLevel: oldLevel,
-                oldPoints: oldPoints
-            };
-            
-            userData[type].points += points;
-            
-            // 레벨업 체크
-            if (userData[type].points >= 50) {
-                if (userData[type].level < 10) {
-                    userData[type].level++;
-                    userData[type].points -= 50;
-                    showNotification(`🎉 ${currentUser}의 ${type === 'strength' ? '근력' : '지력'} 캐릭터가 레벨 ${userData[type].level}로 성장했습니다!`);
-                } else {
-                    userData[type].points = 50;
-                }
-            }
-            
-            await saveDataToSheet();
-            updateDisplay();
-            showNotification(`+${points} 포인트 획득!`);
-            updateSyncStatus('✅ 동기화 완료', 'success');
-        }
-        
-        // 마지막 행동 되돌리기
-        async function undoLastAction() {
-            if (!lastAction) {
-                showNotification('되돌릴 행동이 없습니다.', 'error');
-                return;
-            }
-            
-            if (!isConnected) {
-                showNotification('구글 시트에 먼저 연결해주세요.', 'error');
-                return;
-            }
-            
-            const userData = gameData[lastAction.user];
-            userData[lastAction.type].level = lastAction.oldLevel;
-            userData[lastAction.type].points = lastAction.oldPoints;
-            
-            await saveDataToSheet();
-            updateDisplay();
-            showNotification('마지막 행동이 취소되었습니다.');
-            lastAction = null;
-            updateSyncStatus('✅ 동기화 완료', 'success');
-        }
-        
-        // 캐릭터 아이콘 업데이트 함수
-        function updateCharacterIcon(elementId, imageUrlOrEmoji) {
-            const element = document.getElementById(elementId);
-            
-            // URL인지 확인 (http로 시작하거나 .jpg, .png 등 포함)
-            if (imageUrlOrEmoji.startsWith('http') || imageUrlOrEmoji.includes('.jpg') || imageUrlOrEmoji.includes('.png') || imageUrlOrEmoji.includes('.gif')) {
-                // 이미지인 경우
-                element.innerHTML = `<img src="${imageUrlOrEmoji}" alt="캐릭터" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                element.className = 'character-icon';
-            } else {
-                // 이모지인 경우
-                element.textContent = imageUrlOrEmoji;
-                element.className = 'character-icon emoji';
-            }
-        }
-        // 화면 업데이트
-        function updateDisplay() {
-            const userData = gameData[currentUser];
-            
-            // 근력 캐릭터 업데이트
-            const strengthLevel = userData.strength.level;
-            const strengthPoints = userData.strength.points;
-            const strengthProgress = (strengthPoints / 50) * 100;
-            
-            updateCharacterIcon('strength-char', characterEvolution.strength[strengthLevel - 1]);
-            document.getElementById('strength-name').textContent = characterNames.strength[strengthLevel - 1];
-            document.getElementById('strength-level').textContent = `레벨 ${strengthLevel}`;
-            document.getElementById('strength-progress').style.width = `${strengthProgress}%`;
-            document.getElementById('strength-text').textContent = `${strengthPoints}/50`;
-            
-            // 지력 캐릭터 업데이트
-            const intelligenceLevel = userData.intelligence.level;
-            const intelligencePoints = userData.intelligence.points;
-            const intelligenceProgress = (intelligencePoints / 50) * 100;
-            
-            updateCharacterIcon('intelligence-char', characterEvolution.intelligence[intelligenceLevel - 1]);
-            document.getElementById('intelligence-name').textContent = characterNames.intelligence[intelligenceLevel - 1];
-            document.getElementById('intelligence-level').textContent = `레벨 ${intelligenceLevel}`;
-            document.getElementById('intelligence-progress').style.width = `${intelligenceProgress}%`;
-            document.getElementById('intelligence-text').textContent = `${intelligencePoints}/50`;
-        }
-        
         // 알림 표시
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
@@ -834,32 +688,63 @@
                 return;
             }
             
-            if (!isConnected) {
-                showNotification('구글 시트에 먼저 연결해주세요.', 'error');
-                return;
-            }
-            
             gameData = {
-                예지: {
-                    strength: { points: 0, level: 1 },
-                    intelligence: { points: 0, level: 1 }
-                },
-                이지: {
-                    strength: { points: 0, level: 1 },
-                    intelligence: { points: 0, level: 1 }
-                }
+                예지: { points: 0, level: 1 },
+                이지: { points: 0, level: 1 }
             };
             
             await saveDataToSheet();
             updateDisplay();
             showNotification('진행상황이 초기화되었습니다.');
-            updateSyncStatus('✅ 동기화 완료', 'success');
         }
         
-        // 초기화
-        window.addEventListener('load', () => {
-            loadSettings();
-        });
+        // 초기화 (강력한 버전)
+        function startApp() {
+            console.log('앱 시작 시도...');
+            
+            // DOM 요소들이 존재하는지 확인
+            const appContent = document.getElementById('app-content');
+            const syncStatus = document.getElementById('sync-status');
+            
+            if (appContent && syncStatus) {
+                // 상태 업데이트
+                syncStatus.textContent = '✅ 앱 시작됨 - 데이터 로딩 중...';
+                syncStatus.className = 'sync-status success';
+                
+                // 실제 초기화 실행
+                try {
+                    initializeApp();
+                } catch (error) {
+                    console.error('초기화 오류:', error);
+                    setTimeout(startApp, 1000); // 1초 후 재시도
+                }
+            } else {
+                console.log('DOM 요소를 찾을 수 없음, 0.5초 후 재시도...');
+                setTimeout(startApp, 500);
+            }
+        }
+        
+        // 즉시 실행 함수로 강제 시작
+        (function() {
+            console.log('즉시 실행 함수 시작');
+            setTimeout(startApp, 100); // 0.1초 후 실행
+        })();
+        
+        // DOM 준비 시 실행
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startApp);
+        } else {
+            console.log('DOM 이미 준비됨, 즉시 실행');
+            startApp();
+        }
+        
+        // window load 이벤트
+        window.addEventListener('load', startApp);
+        
+        // 강력한 백업 실행들
+        setTimeout(startApp, 500);
+        setTimeout(startApp, 1000);
+        setTimeout(startApp, 2000);
     </script>
 </body>
 </html>
