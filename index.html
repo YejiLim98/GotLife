@@ -655,10 +655,10 @@
             // 이미지 또는 이모티콘 표시
             const imgElement = document.getElementById(`${prefix}-image`);
             if (charInfo.image && level <= 4) {
-                // 레벨 1-4: 실제 이미지 사용
+                // 레벨 1-4: 실제 이미지만 사용 (이모티콘 없음)
                 imgElement.innerHTML = `<img src="${charInfo.image}" alt="${charInfo.name}" onerror="this.style.display='none'; this.parentNode.innerHTML='<span class=\\"emoji\\">${charInfo.emoji}</span>'">`;
             } else {
-                // 레벨 5-10: 이모티콘 사용
+                // 레벨 5-10: 이모티콘만 사용
                 imgElement.innerHTML = `<span class="emoji">${charInfo.emoji}</span>`;
             }
             
