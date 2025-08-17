@@ -366,9 +366,9 @@
                             <span>🏊 수영 1회</span>
                             <span class="points">+15</span>
                         </button>
-                        <button class="action-btn" onclick="addActivity('🚶 걷기 (1시간)', 10)">
+                        <button class="action-btn" onclick="addActivity('🚶 걷기 (1시간)', 15)">
                             <span>🚶 걷기 (1시간)</span>
-                            <span class="points">+10</span>
+                            <span class="points">+15</span>
                         </button>
                     </div>
                 </div>
@@ -376,17 +376,17 @@
                 <div class="action-category">
                     <div class="category-title intelligence">🧠 지력 활동</div>
                     <div class="action-buttons">
-                        <button class="action-btn" onclick="addActivity('📚 전공공부 (10분)', 5)">
-                            <span>📚 전공공부 (10분)</span>
-                            <span class="points">+5</span>
+                        <button class="action-btn" onclick="addActivity('📚 전공공부 (30분)', 15)">
+                            <span>📚 전공공부 (30분)</span>
+                            <span class="points">+15</span>
                         </button>
-                        <button class="action-btn" onclick="addActivity('🎨 취미공부 (10분)', 2)">
-                            <span>🎨 취미공부 (10분)</span>
-                            <span class="points">+2</span>
+                        <button class="action-btn" onclick="addActivity('🎨 취미공부 (30분)', 6)">
+                            <span>🎨 취미공부 (30분)</span>
+                            <span class="points">+6</span>
                         </button>
-                        <button class="action-btn" onclick="addActivity('📖 독서 (10분)', 1)">
-                            <span>📖 독서 (10분)</span>
-                            <span class="points">+1</span>
+                        <button class="action-btn" onclick="addActivity('📖 독서 (30분)', 3)">
+                            <span>📖 독서 (30분)</span>
+                            <span class="points">+3</span>
                         </button>
                     </div>
                 </div>
@@ -415,18 +415,18 @@
         // 연결 상태
         let isConnected = false;
         
-        // 캐릭터 데이터 (레벨 1-4는 실제 이미지, 5-10은 이모티콘)
+        // 캐릭터 데이터 (레벨 1-10 모두 실제 이미지 사용)
         const charactersData = [
             { level: 1, name: '에드워드 하이드', dialogue: 'Filled with evil, but truly alive!', youtube: 'https://www.youtube.com/watch?v=7tMdbC1w2Qc', image: './images/level1.JPG', emoji: '😈' },
             { level: 2, name: '루이지 루케니', dialogue: '상관없지, 그게 무슨 상관이람. 하품하며 종말이나 기다리지', youtube: 'https://www.youtube.com/watch?v=6lqadpofsCY', image: './images/level2.JPG', emoji: '🥱' },
             { level: 3, name: '데클란 스완', dialogue: '나한테 이야기 같은 거 없어요. 우리 같은 사람들은 그냥 사는 거예요.', youtube: 'https://www.youtube.com/watch?v=yn70v888TS0', image: './images/level3.JPG', emoji: '🚶‍♂️' },
             { level: 4, name: '앙리 뒤프레', dialogue: '바꿀수없다면 나...웃으면서 보내줘', youtube: 'https://youtu.be/-gBW9moqfEw?si=QxvVQGxmVXLTA2RV', image: './images/level4.JPG', emoji: '😊' },
-            { level: 5, name: '알료샤 까라마조프', dialogue: '나약하다는 건 아직도 사랑할 수 있다는 거', youtube: 'https://www.youtube.com/watch?v=TKNzwPkd9Pk', emoji: '❤️' },
-            { level: 6, name: '킹키부츠 롤라', dialogue: '무엇을 상상하든지 난 그 이상이지', youtube: 'https://www.youtube.com/watch?v=U4qxHto6cKk', emoji: '👠' },
-            { level: 7, name: '제루샤 애벗', dialogue: '행복의 비밀은 바로 현재를 살기. 이 순간 지금 살아가기', youtube: 'https://www.youtube.com/watch?v=jqsZlgaSZeo', emoji: '🌟' },
-            { level: 8, name: '마틸다 웜우드', dialogue: '내 손으로 바꿔야지 나의 얘기', youtube: 'https://www.youtube.com/watch?v=WJOEfVJvqI8', emoji: '📚' },
-            { level: 9, name: '안나', dialogue: '살아온 날들과 사랑한 이들이 너무나 소중한 사람. 지금의 나보다 내일의 내가 더 중요한 사람', youtube: 'https://www.youtube.com/watch?v=mH2bq1CVNoU', emoji: '❄️' },
-            { level: 10, name: '엘파바 트롭', dialogue: '너와 내가 중력을 벗어나 저 끝없는 하늘을 난다면 우릴 막을 순 없어', youtube: 'https://www.youtube.com/watch?v=6-67Q0xALtU', emoji: '🧙‍♀️' }
+            { level: 5, name: '알료샤 까라마조프', dialogue: '나약하다는 건 아직도 사랑할 수 있다는 거', youtube: 'https://www.youtube.com/watch?v=TKNzwPkd9Pk', image: './images/level5.JPG', emoji: '❤️' },
+            { level: 6, name: '킹키부츠 롤라', dialogue: '무엇을 상상하든지 난 그 이상이지', youtube: 'https://www.youtube.com/watch?v=U4qxHto6cKk', image: './images/level6.JPG', emoji: '👠' },
+            { level: 7, name: '제루샤 애벗', dialogue: '행복의 비밀은 바로 현재를 살기. 이 순간 지금 살아가기', youtube: 'https://www.youtube.com/watch?v=jqsZlgaSZeo', image: './images/level7.JPG', emoji: '🌟' },
+            { level: 8, name: '마틸다 웜우드', dialogue: '내 손으로 바꿔야지 나의 얘기', youtube: 'https://www.youtube.com/watch?v=WJOEfVJvqI8', image: './images/level8.JPG', emoji: '📚' },
+            { level: 9, name: '안나', dialogue: '살아온 날들과 사랑한 이들이 너무나 소중한 사람. 지금의 나보다 내일의 내가 더 중요한 사람', youtube: 'https://www.youtube.com/watch?v=mH2bq1CVNoU', image: './images/level9.JPG', emoji: '❄️' },
+            { level: 10, name: '엘파바 트롭', dialogue: '너와 내가 중력을 벗어나 저 끝없는 하늘을 난다면 우릴 막을 순 없어', youtube: 'https://www.youtube.com/watch?v=6-67Q0xALtU', image: './images/level10.JPG', emoji: '🧙‍♀️' }
         ];
         
         // API 호출 함수
@@ -652,13 +652,12 @@
             const progress = (points / 100) * 100;
             const charInfo = charactersData[Math.min(level - 1, charactersData.length - 1)];
             
-            // 이미지 또는 이모티콘 표시
+            // 이미지 표시 (레벨 1-10 모두 실제 이미지 시도, 실패시 이모티콘)
             const imgElement = document.getElementById(`${prefix}-image`);
-            if (charInfo.image && level <= 4) {
-                // 레벨 1-4: 실제 이미지만 사용 (onerror 속성 제거)
-                imgElement.innerHTML = `<img src="${charInfo.image}" alt="${charInfo.name}">`;
+            if (charInfo.image) {
+                imgElement.innerHTML = `<img src="${charInfo.image}" alt="${charInfo.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                       <span class="emoji" style="display: none;">${charInfo.emoji}</span>`;
             } else {
-                // 레벨 5-10: 이모티콘만 사용
                 imgElement.innerHTML = `<span class="emoji">${charInfo.emoji}</span>`;
             }
             
